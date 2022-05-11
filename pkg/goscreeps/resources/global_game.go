@@ -3,7 +3,7 @@ package resources
 import "syscall/js"
 
 type Game struct {
-	ref js.Value
+	ref    js.Value
 	cached map[string]bool
 
 	cpu Cpu
@@ -12,7 +12,7 @@ type Game struct {
 	gpl GlobalPowerLevel
 
 	resources map[AccountResource]int
-	rooms map[string]Room
+	rooms     map[string]*Room
 
 	shard Shard
 
@@ -90,19 +90,17 @@ func (g *Game) Resources() map[AccountResource]int {
 	return g.resources
 }
 
-func (g *Game) Rooms() map[string]Room {
+func (g *Game) Rooms() map[string]*Room {
 	if !g.cached["rooms"] {
 		jsRooms := g.ref.Get("rooms")
 		entries := jsObject.Call("entries", jsRooms)
 		length := entries.Get("length").Int()
-		result := make(map[string]Room, length)
+		result := make(map[string]*Room, length)
 		for i := 0; i < length; i++ {
 			entry := entries.Index(i)
 			key := entry.Index(0).String()
 			value := entry.Index(1)
-			result[key] = Room{
-				ref: value,
-			}
+			result[key] = deRefRoom(value)
 		}
 		g.rooms = result
 		g.cached["rooms"] = true

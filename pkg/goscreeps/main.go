@@ -8,15 +8,15 @@ import (
 )
 
 type Screeps struct {
-	Game *resources.Game
-	RawMemory *resources.RawMemory
+	Game             *resources.Game
+	RawMemory        *resources.RawMemory
 	InterShardMemory *resources.InterShardMemory
-	Memory *resources.Memory
+	Memory           *resources.Memory
 }
 
 var block chan bool
 
-func Start(loop func(s Screeps, console Console))  {
+func Start(onInit, loop func(s Screeps, console Console)) {
 	defer func() {
 		if r := recover(); r != nil {
 			console.Log(fmt.Sprint(r))
@@ -24,7 +24,6 @@ func Start(loop func(s Screeps, console Console))  {
 		}
 	}()
 	block = make(chan bool)
-
 
 	resources.WasmUpdate()
 
@@ -35,12 +34,24 @@ func Start(loop func(s Screeps, console Console))  {
 	js.Global().Set("runLoop", runLoop)
 
 	s := Screeps{
-		Game:      new(resources.Game),
-		RawMemory: new(resources.RawMemory),
+		Game:             new(resources.Game),
+		RawMemory:        new(resources.RawMemory),
 		InterShardMemory: new(resources.InterShardMemory),
-		Memory: new(resources.Memory),
+		Memory:           new(resources.Memory),
 	}
+	s.Game.WasmUpdate()
+	s.RawMemory.WasmUpdate()
+	s.Memory.WasmUpdate()
 	s.InterShardMemory.WasmUpdate()
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				console.Log(fmt.Sprint(r))
+				console.Log(getStack())
+			}
+		}()
+		onInit(s, console)
+	}()
 	for {
 		<-block
 		s.Game.WasmUpdate()

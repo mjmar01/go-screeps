@@ -2,16 +2,16 @@ package resources
 
 import "syscall/js"
 
-type RoomObject interface {
-	ref() js.Value
+type IRoomObject interface {
+	iRef() js.Value
 
-	Pos() Positionable
+	Pos() *RoomPosition
 	Effects() []Effect
-	// TODO Room() *Room
+	Room() *Room
 }
 
 type Effect struct {
-	Effect EffectType
-	Level int
+	Effect         EffectType
+	Level          int
 	TicksRemaining int
 }

@@ -1,149 +1,155 @@
 package resources
 
-type AccountResource string
-
-const (
-	SUBSCRIPTION_TOKEN AccountResource = "token"
-	CPU_UNLOCK         AccountResource = "cpuUnlock"
-	PIXEL              AccountResource = "pixel"
-	ACCESS_KEY         AccountResource = "accessKey"
+type (
+	AccountResourceConst string
+	AlgorithmConst       string
+	StructureConst       string
+	LookConst            string
+	DirectionConst       int
+	EffectTypeConst      int
+	ColorConst           int
+	FindObjectConst      int
+	FindPosConst         int
+	TerrainConst         int
 )
 
-type EffectType int
-
 const (
-	PWR_GENERATE_OPS       EffectType = 1
-	PWR_OPERATE_SPAWN      EffectType = 2
-	PWR_OPERATE_TOWER      EffectType = 3
-	PWR_OPERATE_STORAGE    EffectType = 4
-	PWR_OPERATE_LAB        EffectType = 5
-	PWR_OPERATE_EXTENSION  EffectType = 6
-	PWR_OPERATE_OBSERVER   EffectType = 7
-	PWR_OPERATE_TERMINAL   EffectType = 8
-	PWR_DISRUPT_SPAWN      EffectType = 9
-	PWR_DISRUPT_TOWER      EffectType = 10
-	PWR_DISRUPT_SOURCE     EffectType = 11
-	PWR_SHIELD             EffectType = 12
-	PWR_REGEN_SOURCE       EffectType = 13
-	PWR_REGEN_MINERAL      EffectType = 14
-	PWR_DISRUPT_TERMINAL   EffectType = 15
-	PWR_OPERATE_POWER      EffectType = 16
-	PWR_FORTIFY            EffectType = 17
-	PWR_OPERATE_CONTROLLER EffectType = 18
-	PWR_OPERATE_FACTORY    EffectType = 19
-	EFFECT_INVULNERABILITY EffectType = 1001
-	EFFECT_COLLAPSE_TIMER  EffectType = 1002
+	SUBSCRIPTION_TOKEN AccountResourceConst = "token"
+	CPU_UNLOCK         AccountResourceConst = "cpuUnlock"
+	PIXEL              AccountResourceConst = "pixel"
+	ACCESS_KEY         AccountResourceConst = "accessKey"
 )
 
-type Color int
-
 const (
-	COLOR_RED    Color = 1
-	COLOR_PURPLE Color = 2
-	COLOR_BLUE   Color = 3
-	COLOR_CYAN   Color = 4
-	COLOR_GREEN  Color = 5
-	COLOR_YELLOW Color = 6
-	COLOR_ORANGE Color = 7
-	COLOR_BROWN  Color = 8
-	COLOR_GREY   Color = 9
-	COLOR_WHITE  Color = 10
+	PWR_GENERATE_OPS       EffectTypeConst = 1
+	PWR_OPERATE_SPAWN      EffectTypeConst = 2
+	PWR_OPERATE_TOWER      EffectTypeConst = 3
+	PWR_OPERATE_STORAGE    EffectTypeConst = 4
+	PWR_OPERATE_LAB        EffectTypeConst = 5
+	PWR_OPERATE_EXTENSION  EffectTypeConst = 6
+	PWR_OPERATE_OBSERVER   EffectTypeConst = 7
+	PWR_OPERATE_TERMINAL   EffectTypeConst = 8
+	PWR_DISRUPT_SPAWN      EffectTypeConst = 9
+	PWR_DISRUPT_TOWER      EffectTypeConst = 10
+	PWR_DISRUPT_SOURCE     EffectTypeConst = 11
+	PWR_SHIELD             EffectTypeConst = 12
+	PWR_REGEN_SOURCE       EffectTypeConst = 13
+	PWR_REGEN_MINERAL      EffectTypeConst = 14
+	PWR_DISRUPT_TERMINAL   EffectTypeConst = 15
+	PWR_OPERATE_POWER      EffectTypeConst = 16
+	PWR_FORTIFY            EffectTypeConst = 17
+	PWR_OPERATE_CONTROLLER EffectTypeConst = 18
+	PWR_OPERATE_FACTORY    EffectTypeConst = 19
+	EFFECT_INVULNERABILITY EffectTypeConst = 1001
+	EFFECT_COLLAPSE_TIMER  EffectTypeConst = 1002
 )
 
-type FindType int
-
 const (
-	FIND_EXIT_TOP                   FindType = 1
-	FIND_EXIT_RIGHT                 FindType = 3
-	FIND_EXIT_BOTTOM                FindType = 5
-	FIND_EXIT_LEFT                  FindType = 7
-	FIND_EXIT                       FindType = 10
-	FIND_CREEPS                     FindType = 101
-	FIND_MY_CREEPS                  FindType = 102
-	FIND_HOSTILE_CREEPS             FindType = 103
-	FIND_SOURCES_ACTIVE             FindType = 104
-	FIND_SOURCES                    FindType = 105
-	FIND_DROPPED_RESOURCES          FindType = 106
-	FIND_STRUCTURES                 FindType = 107
-	FIND_MY_STRUCTURES              FindType = 108
-	FIND_HOSTILE_STRUCTURES         FindType = 109
-	FIND_FLAGS                      FindType = 110
-	FIND_CONSTRUCTION_SITES         FindType = 111
-	FIND_MY_SPAWNS                  FindType = 112
-	FIND_HOSTILE_SPAWNS             FindType = 113
-	FIND_MY_CONSTRUCTION_SITES      FindType = 114
-	FIND_HOSTILE_CONSTRUCTION_SITES FindType = 115
-	FIND_MINERALS                   FindType = 116
-	FIND_NUKES                      FindType = 117
-	FIND_TOMBSTONES                 FindType = 118
-	FIND_POWER_CREEPS               FindType = 119
-	FIND_MY_POWER_CREEPS            FindType = 120
-	FIND_HOSTILE_POWER_CREEPS       FindType = 121
-	FIND_DEPOSITS                   FindType = 122
-	FIND_RUINS                      FindType = 123
+	COLOR_RED    ColorConst = 1
+	COLOR_PURPLE ColorConst = 2
+	COLOR_BLUE   ColorConst = 3
+	COLOR_CYAN   ColorConst = 4
+	COLOR_GREEN  ColorConst = 5
+	COLOR_YELLOW ColorConst = 6
+	COLOR_ORANGE ColorConst = 7
+	COLOR_BROWN  ColorConst = 8
+	COLOR_GREY   ColorConst = 9
+	COLOR_WHITE  ColorConst = 10
 )
 
-type AlgorithmType string
-
 const (
-	ALGORITHM_ASTAR    AlgorithmType = "astar"
-	ALGORITHM_DIJKSTRA AlgorithmType = "dijkstra"
+	FIND_EXIT_TOP    FindPosConst = 1
+	FIND_EXIT_RIGHT  FindPosConst = 3
+	FIND_EXIT_BOTTOM FindPosConst = 5
+	FIND_EXIT_LEFT   FindPosConst = 7
+	FIND_EXIT        FindPosConst = 10
 )
 
-type DirectionType int
-
 const (
-	TOP          DirectionType = 1
-	TOP_RIGHT    DirectionType = 2
-	RIGHT        DirectionType = 3
-	BOTTOM_RIGHT DirectionType = 4
-	BOTTOM       DirectionType = 5
-	BOTTOM_LEFT  DirectionType = 6
-	LEFT         DirectionType = 7
-	TOP_LEFT     DirectionType = 8
+	FIND_CREEPS                     FindObjectConst = 101
+	FIND_MY_CREEPS                  FindObjectConst = 102
+	FIND_HOSTILE_CREEPS             FindObjectConst = 103
+	FIND_SOURCES_ACTIVE             FindObjectConst = 104
+	FIND_SOURCES                    FindObjectConst = 105
+	FIND_DROPPED_RESOURCES          FindObjectConst = 106
+	FIND_STRUCTURES                 FindObjectConst = 107
+	FIND_MY_STRUCTURES              FindObjectConst = 108
+	FIND_HOSTILE_STRUCTURES         FindObjectConst = 109
+	FIND_FLAGS                      FindObjectConst = 110
+	FIND_CONSTRUCTION_SITES         FindObjectConst = 111
+	FIND_MY_SPAWNS                  FindObjectConst = 112
+	FIND_HOSTILE_SPAWNS             FindObjectConst = 113
+	FIND_MY_CONSTRUCTION_SITES      FindObjectConst = 114
+	FIND_HOSTILE_CONSTRUCTION_SITES FindObjectConst = 115
+	FIND_MINERALS                   FindObjectConst = 116
+	FIND_NUKES                      FindObjectConst = 117
+	FIND_TOMBSTONES                 FindObjectConst = 118
+	FIND_POWER_CREEPS               FindObjectConst = 119
+	FIND_MY_POWER_CREEPS            FindObjectConst = 120
+	FIND_HOSTILE_POWER_CREEPS       FindObjectConst = 121
+	FIND_DEPOSITS                   FindObjectConst = 122
+	FIND_RUINS                      FindObjectConst = 123
 )
 
-type StructureType string
-
 const (
-	STRUCTURE_SPAWN        StructureType = "spawn"
-	STRUCTURE_EXTENSION    StructureType = "extension"
-	STRUCTURE_ROAD         StructureType = "road"
-	STRUCTURE_WALL         StructureType = "constructedWall"
-	STRUCTURE_RAMPART      StructureType = "rampart"
-	STRUCTURE_KEEPER_LAIR  StructureType = "keeperLair"
-	STRUCTURE_PORTAL       StructureType = "portal"
-	STRUCTURE_CONTROLLER   StructureType = "controller"
-	STRUCTURE_LINK         StructureType = "link"
-	STRUCTURE_STORAGE      StructureType = "storage"
-	STRUCTURE_TOWER        StructureType = "tower"
-	STRUCTURE_OBSERVER     StructureType = "observer"
-	STRUCTURE_POWER_BANK   StructureType = "powerBank"
-	STRUCTURE_POWER_SPAWN  StructureType = "powerSpawn"
-	STRUCTURE_EXTRACTOR    StructureType = "extractor"
-	STRUCTURE_LAB          StructureType = "lab"
-	STRUCTURE_TERMINAL     StructureType = "terminal"
-	STRUCTURE_CONTAINER    StructureType = "container"
-	STRUCTURE_NUKER        StructureType = "nuker"
-	STRUCTURE_FACTORY      StructureType = "factory"
-	STRUCTURE_INVADER_CORE StructureType = "invaderCore"
+	ALGORITHM_ASTAR    AlgorithmConst = "astar"
+	ALGORITHM_DIJKSTRA AlgorithmConst = "dijkstra"
 )
 
-type LookType string
+const (
+	TOP          DirectionConst = 1
+	TOP_RIGHT    DirectionConst = 2
+	RIGHT        DirectionConst = 3
+	BOTTOM_RIGHT DirectionConst = 4
+	BOTTOM       DirectionConst = 5
+	BOTTOM_LEFT  DirectionConst = 6
+	LEFT         DirectionConst = 7
+	TOP_LEFT     DirectionConst = 8
+)
 
 const (
-	LOOK_CREEPS             LookType = "creep"
-	LOOK_ENERGY             LookType = "energy"
-	LOOK_RESOURCES          LookType = "resource"
-	LOOK_SOURCES            LookType = "source"
-	LOOK_MINERALS           LookType = "mineral"
-	LOOK_DEPOSITS           LookType = "deposit"
-	LOOK_STRUCTURES         LookType = "structure"
-	LOOK_FLAGS              LookType = "flag"
-	LOOK_CONSTRUCTION_SITES LookType = "constructionSite"
-	LOOK_NUKES              LookType = "nuke"
-	LOOK_TERRAIN            LookType = "terrain"
-	LOOK_TOMBSTONES         LookType = "tombstone"
-	LOOK_POWER_CREEPS       LookType = "powerCreep"
-	LOOK_RUINS              LookType = "ruin"
+	STRUCTURE_SPAWN        StructureConst = "spawn"
+	STRUCTURE_EXTENSION    StructureConst = "extension"
+	STRUCTURE_ROAD         StructureConst = "road"
+	STRUCTURE_WALL         StructureConst = "constructedWall"
+	STRUCTURE_RAMPART      StructureConst = "rampart"
+	STRUCTURE_KEEPER_LAIR  StructureConst = "keeperLair"
+	STRUCTURE_PORTAL       StructureConst = "portal"
+	STRUCTURE_CONTROLLER   StructureConst = "controller"
+	STRUCTURE_LINK         StructureConst = "link"
+	STRUCTURE_STORAGE      StructureConst = "storage"
+	STRUCTURE_TOWER        StructureConst = "tower"
+	STRUCTURE_OBSERVER     StructureConst = "observer"
+	STRUCTURE_POWER_BANK   StructureConst = "powerBank"
+	STRUCTURE_POWER_SPAWN  StructureConst = "powerSpawn"
+	STRUCTURE_EXTRACTOR    StructureConst = "extractor"
+	STRUCTURE_LAB          StructureConst = "lab"
+	STRUCTURE_TERMINAL     StructureConst = "terminal"
+	STRUCTURE_CONTAINER    StructureConst = "container"
+	STRUCTURE_NUKER        StructureConst = "nuker"
+	STRUCTURE_FACTORY      StructureConst = "factory"
+	STRUCTURE_INVADER_CORE StructureConst = "invaderCore"
+)
+
+const (
+	LOOK_CREEPS             LookConst = "creep"
+	LOOK_ENERGY             LookConst = "energy"
+	LOOK_RESOURCES          LookConst = "resource"
+	LOOK_SOURCES            LookConst = "source"
+	LOOK_MINERALS           LookConst = "mineral"
+	LOOK_DEPOSITS           LookConst = "deposit"
+	LOOK_STRUCTURES         LookConst = "structure"
+	LOOK_FLAGS              LookConst = "flag"
+	LOOK_CONSTRUCTION_SITES LookConst = "constructionSite"
+	LOOK_NUKES              LookConst = "nuke"
+	LOOK_TERRAIN            LookConst = "terrain"
+	LOOK_TOMBSTONES         LookConst = "tombstone"
+	LOOK_POWER_CREEPS       LookConst = "powerCreep"
+	LOOK_RUINS              LookConst = "ruin"
+)
+
+const (
+	TERRAIN_MASK_WALL  TerrainConst = 1
+	TERRAIN_MASK_SWAMP TerrainConst = 2
+	TERRAIN_MASK_LAVA  TerrainConst = 4
 )

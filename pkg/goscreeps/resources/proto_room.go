@@ -15,9 +15,10 @@ type Room struct {
 	// TODO *RoomVisual
 }
 
-var anyRoom = js.Global().Get("Room")
-
 func deRefRoom(ref js.Value) *Room {
+	if ref.IsNull() {
+		return nil
+	}
 	return &Room{
 		ref:    ref,
 		cached: make(map[string]bool),
@@ -54,77 +55,25 @@ func (r *Room) Name() string {
 // TODO Terminal()
 // TODO Visual()
 
-func SerializePath(path Path) string {
-	packedPath := packFindPathResult(path)
-	return anyRoom.Call("serializePath", packedPath).String()
+func (r *Room) SerializePath(path Path) string {
+	packedPath := packPath(path)
+	return r.ref.Call("serializePath", packedPath).String()
 }
 
-func DeserializePath(path string) Path {
-	deserializedPath := anyRoom.Call("deserializePath", path)
-	return unpackFindPathResult(deserializedPath)
+func (r *Room) DeserializePath(path string) Path {
+	deserializedPath := r.ref.Call("deserializePath", path)
+	return unpackPath(deserializedPath)
 }
 
-func (r *Room) CreateConstructionSiteAtCoords(x, y int, sType StructureType, name string) ScreepsError {
-	var jsName js.Value
-	if name == "" {
-		jsName = js.Undefined()
-	} else {
-		jsName = js.ValueOf(name)
-	}
-	result := r.ref.Call("createConstructionSite", x, y, string(sType), jsName).Int()
-	return ReturnErr(ErrorCode(result))
+func (r *Room) CreateConstructionSite(x, y int, sType StructureConst, name string) ScreepsError {
+	return createConstructionSite(r.GetPositionAt(x, y), sType, name)
 }
 
-func (r *Room) CreateConstructionSiteAtTarget(pos IRoomPosition, sType StructureType, name string) ScreepsError {
-	var jsName js.Value
-	if name == "" {
-		jsName = js.Undefined()
-	} else {
-		jsName = js.ValueOf(name)
-	}
-	result := r.ref.Call("createConstructionSite", pos.iRef(), string(sType), jsName).Int()
-	return ReturnErr(ErrorCode(result))
+func (r *Room) CreateFlag(x, y int, name string, primary ColorConst, secondary ColorConst) (string, ScreepsError) {
+	return createFlag(r.GetPositionAt(x, y), name, primary, secondary)
 }
 
-func (r *Room) CreateFlagAtTarget(pos IRoomPosition, name string, color Color, secondaryColor Color) (string, ScreepsError) {
-	var jsName js.Value
-	if name == "" {
-		jsName = js.Undefined()
-	} else {
-		jsName = js.ValueOf(name)
-	}
-
-	jsColor := js.ValueOf(int(color))
-	jsSecondaryColor := js.ValueOf(int(secondaryColor))
-
-	result := r.ref.Call("createFlag", pos.iRef(), jsName, jsColor, jsSecondaryColor)
-	switch result.Type() {
-	case js.TypeNumber:
-		return "", ReturnErr(ErrorCode(result.Int()))
-	}
-	return result.String(), nil
-}
-
-func (r *Room) CreateFlagAtCoords(x, y int, name string, color Color, secondaryColor Color) (string, ScreepsError) {
-	var jsName js.Value
-	if name == "" {
-		jsName = js.Undefined()
-	} else {
-		jsName = js.ValueOf(name)
-	}
-	jsColor := js.ValueOf(int(color))
-	jsSecondaryColor := js.ValueOf(int(secondaryColor))
-
-	result := r.ref.Call("createFlag", x, y, jsName, jsColor, jsSecondaryColor)
-	switch result.Type() {
-	case js.TypeNumber:
-		return "", ReturnErr(ErrorCode(result.Int()))
-	}
-
-	return result.String(), nil
-}
-
-func (r *Room) Find(fType FindType, opts *FindFilterOpts) []IRoomObject {
+func (r *Room) FindObject(fType FindObjectConst, opts *FindFilterOpts) []IRoomObject {
 	// TODO Filter
 	foundPositions := r.ref.Call("find", int(fType))
 	foundPositionsCount := foundPositions.Length()
@@ -134,12 +83,60 @@ func (r *Room) Find(fType FindType, opts *FindFilterOpts) []IRoomObject {
 	}
 	return result
 }
-func unpackFindPathResult(path js.Value) Path {
+
+func (r *Room) FindPos(fType FindPosConst, opts *FindFilterOpts) []IRoomPosition {
+	// TODO Filter
+	foundPositions := r.ref.Call("find", int(fType))
+	foundPositionsCount := foundPositions.Length()
+	result := make([]IRoomPosition, foundPositionsCount)
+	for i := 0; i < foundPositionsCount; i++ {
+		result[i] = deRefRoomPosition(foundPositions.Index(i))
+	}
+	return result
+}
+
+func (r *Room) FindExitTo(roomName string) FindPosConst {
+	return FindPosConst(r.ref.Call("findExitTo", roomName).Int())
+}
+
+func (r *Room) FindPath(from, to IRoomPosition, opts *FindPathOpts) Path {
+	jsOpts := packFindPathOpts(opts)
+	path := r.ref.Call("findPath", from.iRef(), to.iRef(), jsOpts)
+	return unpackPath(path)
+}
+
+func (r *Room) GetEventLog() string {
+	return r.ref.Call("getEventLog", true).String()
+}
+
+func (r *Room) GetPositionAt(x, y int) IRoomPosition {
+	ref := roomPositionConstructor.New(x, y, r.Name())
+	return &RoomPosition{
+		ref:       ref,
+		cached:    map[string]bool{"pX": true, "pY": true, "pRoomName": true},
+		pX:        x,
+		pY:        y,
+		pRoomName: r.Name(),
+	}
+}
+
+func (r *Room) GetTerrain() *Terrain {
+	return deRefTerrain(r.ref.Call("getTerrain"))
+}
+
+// TODO Look*
+
+func unpackPath(path js.Value) Path {
 	// TODO
 	return nil
 }
 
-func packFindPathResult(path Path) js.Value {
+func packPath(path Path) js.Value {
+	// TODO
+	return js.Null()
+}
+
+func packFindPathOpts(opts *FindPathOpts) js.Value {
 	// TODO
 	return js.Null()
 }

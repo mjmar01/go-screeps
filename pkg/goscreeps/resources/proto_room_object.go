@@ -12,7 +12,13 @@ type RoomObject struct {
 }
 
 func deRefRoomObject(ref js.Value) *RoomObject {
-	return &RoomObject{ref: ref, cached: make(map[string]bool)}
+	if ref.IsNull() {
+		return nil
+	}
+	return &RoomObject{
+		ref:    ref,
+		cached: make(map[string]bool),
+	}
 }
 
 func (r *RoomObject) iRef() js.Value {
@@ -21,7 +27,8 @@ func (r *RoomObject) iRef() js.Value {
 
 func (r *RoomObject) Pos() *RoomPosition {
 	if !r.cached["pos"] {
-		r.pos = deRefRoomPosition(r.ref.Get("pos"))
+		ref := r.ref.Get("pos")
+		r.pos = deRefRoomPosition(ref)
 		r.cached["pos"] = true
 	}
 	return r.pos
@@ -35,7 +42,7 @@ func (r *RoomObject) Effects() []Effect {
 		for i := 0; i < effectCount; i++ {
 			effect := jsEffects.Index(i)
 			result[i] = Effect{
-				Effect:         EffectType(effect.Get("effect").Int()),
+				Effect:         EffectTypeConst(effect.Get("effect").Int()),
 				TicksRemaining: effect.Get("ticksRemaining").Int(),
 			}
 			level := effect.Get("level")
@@ -57,14 +64,14 @@ func (r *RoomObject) Room() *Room {
 	return r.room
 }
 
-func (r *RoomObject) X() int {
-	return r.Pos().X()
+func (r *RoomObject) x() int {
+	return r.Pos().x()
 }
 
-func (r *RoomObject) Y() int {
-	return r.Pos().Y()
+func (r *RoomObject) y() int {
+	return r.Pos().y()
 }
 
-func (r *RoomObject) RoomName() string {
-	return r.Pos().RoomName()
+func (r *RoomObject) roomName() string {
+	return r.Pos().roomName()
 }

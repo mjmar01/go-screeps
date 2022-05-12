@@ -199,13 +199,13 @@ var utf8 = {}
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 //
-// This file has been modified for use by the TinyGo compiler.
 
 const enosys = () => {
     const err = new Error("not implemented");
     err.code = "ENOSYS";
     return err;
 };
+
 if (!global.fs) {
     let outputBuf = "";
     global.fs = {
@@ -259,16 +259,10 @@ global.Go = class {
         this.env = {};
         this.exit = (code) => {
             if (code !== 0) {
-                console.warn("exit code:", code);
+                console.log("exit code:", code);
             }
         };
-        this._exitPromise = new Promise((resolve) => {
-            this._resolveExitPromise = resolve;
-        });
         this._pendingEvent = null;
-        this._scheduledTimeouts = new Map();
-        this._nextCallbackTimeoutID = 1;
-
         this.encoder = {
             encode: function(text) {
                 let encodedString = utf8.encode(text);
@@ -291,6 +285,8 @@ global.Go = class {
             }
             return typedArray;
         };
+        this._scheduledTimeouts = new Map();
+        this._nextCallbackTimeoutID = 1;
 
         const setInt64 = (addr, v) => {
             this.mem.setUint32(addr + 0, v, true);
@@ -388,7 +384,7 @@ global.Go = class {
             return this.decoder.decode(new DataView(this._inst.exports.mem.buffer, saddr, len));
         }
 
-        const timeOrigin = Date.now()
+        const timeOrigin = Date.now();
         this.importObject = {
             go: {
                 // Go's SP does not change as long as no Go code is running. Some operations (e.g. calls, getters and setters)
@@ -411,11 +407,11 @@ global.Go = class {
 
                 // func wasmWrite(fd uintptr, p unsafe.Pointer, n int32)
                 "runtime.wasmWrite": (sp) => {
-                    sp >>>= 0;
-                    const fd = getInt64(sp + 8);
-                    const p = getInt64(sp + 16);
-                    const n = this.mem.getInt32(sp + 24, true);
-                    fs.writeSync(fd, new Uint8Array(this._inst.exports.mem.buffer, p, n));
+                    //sp >>>= 0;
+                    //const fd = getInt64(sp + 8);
+                    //const p = getInt64(sp + 16);
+                    //const n = this.mem.getInt32(sp + 24, true);
+                    //fs.writeSync(fd, new Uint8Array(this._inst.exports.mem.buffer, p, n));
                 },
 
                 // func resetMemoryDataView()
@@ -427,7 +423,7 @@ global.Go = class {
                 // func nanotime1() int64
                 "runtime.nanotime1": (sp) => {
                     sp >>>= 0;
-                    setInt64(sp + 8, (timeOrigin) * 1000000);
+                    setInt64(sp + 8, Date.now() * 1000000);
                 },
 
                 // func walltime1() (sec int64, nsec int32)
@@ -440,30 +436,34 @@ global.Go = class {
 
                 // func scheduleTimeoutEvent(delay int64) int32
                 "runtime.scheduleTimeoutEvent": (sp) => {
-                    sp >>>= 0;
-                    const id = this._nextCallbackTimeoutID;
-                    this._nextCallbackTimeoutID++;
-                    this._scheduledTimeouts.set(id, setTimeout(
-                        () => {
-                            this._resume();
-                            while (this._scheduledTimeouts.has(id)) {
-                                // for some reason Go failed to register the timeout event, log and try again
-                                // (temporary workaround for https://github.com/golang/go/issues/28975)
-                                console.warn("scheduleTimeoutEvent: missed timeout event");
-                                this._resume();
-                            }
-                        },
-                        getInt64(sp + 8) + 1, // setTimeout has been seen to fire up to 1 millisecond early
-                    ));
-                    this.mem.setInt32(sp + 16, id, true);
+                    // screeps doesn't have "setTimeout". Hopefully this function won't be needed.
+
+                    //sp >>>= 0;
+                    //const id = this._nextCallbackTimeoutID;
+                    //this._nextCallbackTimeoutID++;
+                    //this._scheduledTimeouts.set(id, setTimeout(
+                    //	() => {
+                    //		this._resume();
+                    //		while (this._scheduledTimeouts.has(id)) {
+                    //			// for some reason Go failed to register the timeout event, log and try again
+                    //			// (temporary workaround for https://github.com/golang/go/issues/28975)
+                    //			console.warn("scheduleTimeoutEvent: missed timeout event");
+                    //			this._resume();
+                    //		}
+                    //	},
+                    //	getInt64(sp + 8) + 1, // setTimeout has been seen to fire up to 1 millisecond early
+                    //));
+                    //this.mem.setInt32(sp + 16, id, true);
                 },
 
                 // func clearTimeoutEvent(id int32)
                 "runtime.clearTimeoutEvent": (sp) => {
-                    sp >>>= 0;
-                    const id = this.mem.getInt32(sp + 8, true);
-                    clearTimeout(this._scheduledTimeouts.get(id));
-                    this._scheduledTimeouts.delete(id);
+                    // screeps doesn't have "setTimeout". Hopefully this function won't be needed.
+
+                    //sp >>>= 0;
+                    //const id = this.mem.getInt32(sp + 8, true);
+                    //clearTimeout(this._scheduledTimeouts.get(id));
+                    //this._scheduledTimeouts.delete(id);
                 },
 
                 // func getRandomData(r []byte)
@@ -535,6 +535,7 @@ global.Go = class {
                         storeValue(sp + 56, result);
                         this.mem.setUint8(sp + 64, 1);
                     } catch (err) {
+                        sp = this._inst.exports.getsp() >>> 0; // see comment above
                         storeValue(sp + 56, err);
                         this.mem.setUint8(sp + 64, 0);
                     }
@@ -551,6 +552,7 @@ global.Go = class {
                         storeValue(sp + 40, result);
                         this.mem.setUint8(sp + 48, 1);
                     } catch (err) {
+                        sp = this._inst.exports.getsp() >>> 0; // see comment above
                         storeValue(sp + 40, err);
                         this.mem.setUint8(sp + 48, 0);
                     }
@@ -567,6 +569,7 @@ global.Go = class {
                         storeValue(sp + 40, result);
                         this.mem.setUint8(sp + 48, 1);
                     } catch (err) {
+                        sp = this._inst.exports.getsp() >>> 0; // see comment above
                         storeValue(sp + 40, err);
                         this.mem.setUint8(sp + 48, 0);
                     }
@@ -636,10 +639,7 @@ global.Go = class {
         };
     }
 
-    async run(instance) {
-        if (!(instance instanceof WebAssembly.Instance)) {
-            throw new Error("Go.run: WebAssembly.Instance expected");
-        }
+    run(instance) {
         this._inst = instance;
         this.mem = new DataView(this._inst.exports.mem.buffer);
         this._values = [ // JS values that Go currently has references to, indexed by reference id
@@ -660,8 +660,8 @@ global.Go = class {
             [global, 5],
             [this, 6],
         ]);
-        this._idPool = [];   // unused ids that have been garbage collected
-        this.exited = false; // whether the Go program has exited
+        this._idPool = [];      // unused ids that have been garbage collected
+        this.exited = false;    // whether the Go program has exited
 
         // Pass command line arguments and environment variables to WebAssembly by writing them to the linear memory.
         let offset = 4096;
@@ -678,13 +678,11 @@ global.Go = class {
         };
 
         const argc = this.argv.length;
-
         const argvPtrs = [];
         this.argv.forEach((arg) => {
             argvPtrs.push(strPtr(arg));
         });
         argvPtrs.push(0);
-
         const keys = Object.keys(this.env).sort();
         keys.forEach((key) => {
             argvPtrs.push(strPtr(`${key}=${this.env[key]}`));
@@ -699,20 +697,10 @@ global.Go = class {
         });
 
         this._inst.exports.run(argc, argv);
-        if (this.exited) {
-            this._resolveExitPromise();
-        }
-        await this._exitPromise;
     }
 
     _resume() {
-        if (this.exited) {
-            throw new Error("Go program has already exited");
-        }
         this._inst.exports.resume();
-        if (this.exited) {
-            this._resolveExitPromise();
-        }
     }
 
     _makeFuncWrapper(id) {
@@ -727,19 +715,24 @@ global.Go = class {
 }
 
 let go = undefined
-const bytecode = require('screepsgo');
-const wasmModule = new WebAssembly.Module(bytecode);
+let wasmInstance = undefined
+let block = false
 
 function loadWasm() {
+    block = true
+    const bytecode = require('screepsgo');
     let localGo = new Go();
-    let wasmInstance = new WebAssembly.Instance(wasmModule, localGo.importObject)
-    localGo.run(wasmInstance)
-    go = localGo
-    global.go = go
+    WebAssembly.instantiate(bytecode, localGo.importObject).then(r => {
+        block = false
+        wasmInstance = r.instance
+        localGo.run(wasmInstance)
+        go = localGo
+        global.go = go
+    })
 }
 
 module.exports.loop = () => {
-    if (!go && Game.cpu.bucket >= 500)
+    if (!go && Game.cpu.bucket >= 500 && !block)
         loadWasm();
     if (!go)
         return;

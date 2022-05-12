@@ -16,7 +16,6 @@ type RawMemory struct {
 	segments map[int]string
 }
 
-
 func (rm *RawMemory) WasmUpdate() {
 	rm.ref = jsGlobal.Get("RawMemory")
 	rm.loadSegments()

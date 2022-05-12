@@ -14,21 +14,21 @@ type Screeps struct {
 	Memory           *resources.Memory
 }
 
-var block chan bool
+var loopTrigger chan bool
 
-func Start(onInit, loop func(s Screeps, console Console)) {
+func Start(onReset, loop func(s Screeps, console Console)) {
 	defer func() {
 		if r := recover(); r != nil {
 			console.Log(fmt.Sprint(r))
 			console.Log(getStack())
 		}
 	}()
-	block = make(chan bool)
+	loopTrigger = make(chan bool)
 
 	resources.WasmUpdate()
 
 	runLoop := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		block <- false
+		loopTrigger <- true
 		return nil
 	})
 	js.Global().Set("runLoop", runLoop)
@@ -50,10 +50,10 @@ func Start(onInit, loop func(s Screeps, console Console)) {
 				console.Log(getStack())
 			}
 		}()
-		onInit(s, console)
+		onReset(s, console)
 	}()
 	for {
-		<-block
+		<-loopTrigger
 		s.Game.WasmUpdate()
 		s.RawMemory.WasmUpdate()
 		s.Memory.WasmUpdate()

@@ -112,7 +112,6 @@ func (r *Room) CreateFlagAtCoords(x, y int, name string, color Color, secondaryC
 	} else {
 		jsName = js.ValueOf(name)
 	}
-
 	jsColor := js.ValueOf(int(color))
 	jsSecondaryColor := js.ValueOf(int(secondaryColor))
 
@@ -121,6 +120,7 @@ func (r *Room) CreateFlagAtCoords(x, y int, name string, color Color, secondaryC
 	case js.TypeNumber:
 		return "", ReturnErr(ErrorCode(result.Int()))
 	}
+
 	return result.String(), nil
 }
 

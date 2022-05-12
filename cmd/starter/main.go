@@ -2,28 +2,14 @@ package main
 
 import (
 	"github.com/mjmar01/go-screeps/pkg/goscreeps"
-	"github.com/mjmar01/go-screeps/pkg/goscreeps/resources"
 )
 
 func main() {
-	goscreeps.Start(onInit, loop)
+	goscreeps.Start(onReset, loop)
 }
 
-func onInit(s goscreeps.Screeps, console goscreeps.Console) {
-	console.Log("Started once")
-
-	room := s.Game.Rooms()["W4N8"]
-	name, err := room.CreateFlagAtCoords(16, 16, "", resources.COLOR_WHITE, resources.COLOR_RED)
-	if err != nil {
-		console.Log(err.Error())
-	} else {
-		console.Log("Created flag:", name)
-	}
-
-	err = room.CreateConstructionSiteAtTarget(resources.NewRoomPosition(18, 19, room.Name()), resources.STRUCTURE_CONTAINER, "")
-	if err != nil {
-		console.Log(err.Error())
-	}
+func onReset(s goscreeps.Screeps, console goscreeps.Console) {
+	console.Log("Started once", s.Game.Time())
 }
 
 func loop(s goscreeps.Screeps, console goscreeps.Console) {

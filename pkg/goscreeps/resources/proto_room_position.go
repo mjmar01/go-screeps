@@ -87,11 +87,11 @@ func (r *RoomPosition) FindClosestPosByRange(targets []IRoomPosition, opts *Find
 	return findClosestPosByRange(r, targets, opts)
 }
 
-func (r *RoomPosition) FindTypeInRange(fType FindConst, maxRange float64, opts *FindFilterOpts) []IRoomPosition {
+func (r *RoomPosition) FindTypeInRange(fType FindConst, maxRange int, opts *FindFilterOpts) []IRoomPosition {
 	return findTypeInRange(r, fType, maxRange, opts)
 }
 
-func (r *RoomPosition) FindPosInRange(targets []IRoomPosition, maxRange float64, opts *FindFilterOpts) []IRoomPosition {
+func (r *RoomPosition) FindPosInRange(targets []IRoomPosition, maxRange int, opts *FindFilterOpts) []IRoomPosition {
 	return findPosInRange(r, targets, maxRange, opts)
 }
 
@@ -107,7 +107,7 @@ func (r *RoomPosition) GetRangeTo(target IRoomPosition) int {
 	return getRangeTo(r, target)
 }
 
-func (r *RoomPosition) InRangeTo(target IRoomPosition, maxRange float64) bool {
+func (r *RoomPosition) InRangeTo(target IRoomPosition, maxRange int) bool {
 	return inRangeTo(r, target, maxRange)
 }
 

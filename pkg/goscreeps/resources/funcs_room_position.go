@@ -64,11 +64,11 @@ func findClosestPosByRange(src IRoomPosition, targets []IRoomPosition, opts *Fin
 	panic("Implement me")
 }
 
-func findTypeInRange(src IRoomPosition, fType FindConst, maxRange float64, opts *FindFilterOpts) []IRoomPosition {
+func findTypeInRange(src IRoomPosition, fType FindConst, maxRange int, opts *FindFilterOpts) []IRoomPosition {
 	panic("Implement me")
 }
 
-func findPosInRange(src IRoomPosition, targets []IRoomPosition, maxRange float64, opts *FindFilterOpts) []IRoomPosition {
+func findPosInRange(src IRoomPosition, targets []IRoomPosition, maxRange int, opts *FindFilterOpts) []IRoomPosition {
 	panic("Implement me")
 }
 
@@ -84,7 +84,7 @@ func getRangeTo(src IRoomPosition, target IRoomPosition) int {
 	panic("Implement me")
 }
 
-func inRangeTo(src IRoomPosition, target IRoomPosition, maxRange float64) bool {
+func inRangeTo(src IRoomPosition, target IRoomPosition, maxRange int) bool {
 	panic("Implement me")
 }
 

@@ -14,14 +14,13 @@ type StructureContainer struct {
 	hitsMax       int
 	id            string
 	structureType StructureConst
+
+	store        *Store
+	ticksToDecay int
 }
 
 func (s *StructureContainer) iRef() js.Value {
 	return s.ref
-}
-
-func (s *StructureContainer) CC() {
-	s.cached = make(map[string]bool)
 }
 
 func (s *StructureContainer) deRef(ref js.Value) IRoomPosition {
@@ -57,7 +56,7 @@ func (s *StructureContainer) Pos() *RoomPosition {
 
 func (s *StructureContainer) Effects() []Effect {
 	if !s.cached["effects"] {
-		s.effects = getEffects(s.ref)
+		s.effects = effects(s.ref)
 		s.cached["effects"] = true
 	}
 	return s.effects
@@ -96,29 +95,33 @@ func (s *StructureContainer) Id() string {
 }
 
 func (s *StructureContainer) StructureType() StructureConst {
-	if !s.cached["structureType"] {
-		s.structureType = StructureConst(s.ref.Get("structureType").String())
-		s.cached["structureType"] = true
-	}
-	return s.structureType
+	return STRUCTURE_CONTAINER
 }
 
 func (s *StructureContainer) Destroy() ScreepsError {
-	result := s.ref.Call("destroy").Int()
-	return ReturnErr(ErrorCode(result))
+	return destroy(s.ref)
 }
 
 func (s *StructureContainer) IsActive() bool {
-	return s.ref.Call("isActive").Bool()
+	return isActive(s.ref)
 }
 
 func (s *StructureContainer) NotifyWhenAttacked(enabled bool) ScreepsError {
-	result := s.ref.Call("notifyWhenAttacked", enabled).Int()
-	return ReturnErr(ErrorCode(result))
+	return notifyWhenAttacked(s.ref, enabled)
 }
 
-// TODO Store
+func (s *StructureContainer) Store() *Store {
+	if !s.cached["store"] {
+		s.store = getStore(s.ref)
+		s.cached["store"] = true
+	}
+	return s.store
+}
 
 func (s *StructureContainer) TicksToDecay() int {
-	return s.ref.Get("tickToDecay").Int()
+	if !s.cached["ticksToDecay"] {
+		s.ticksToDecay = s.ref.Get("ticksToDecay").Int()
+		s.cached["ticksToDecay"] = true
+	}
+	return s.ticksToDecay
 }

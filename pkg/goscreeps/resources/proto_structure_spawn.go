@@ -2,7 +2,7 @@ package resources
 
 import "syscall/js"
 
-type Structure struct {
+type StructureSpawn struct {
 	ref    js.Value
 	cached map[string]bool
 
@@ -14,35 +14,42 @@ type Structure struct {
 	hitsMax       int
 	id            string
 	structureType StructureConst
+
+	my    bool
+	owner string
+
+	name string
+	// spawning *StructureSpawning
+	store *Store
 }
 
-func (s *Structure) iRef() js.Value {
+func (s *StructureSpawn) iRef() js.Value {
 	return s.ref
 }
 
-func (s *Structure) deRef(ref js.Value) IRoomPosition {
+func (s *StructureSpawn) deRef(ref js.Value) IRoomPosition {
 	if ref.IsNull() {
 		return nil
 	}
-	return &Structure{
+	return &StructureSpawn{
 		ref:    ref,
 		cached: make(map[string]bool),
 	}
 }
 
-func (s *Structure) x() int {
+func (s *StructureSpawn) x() int {
 	return s.Pos().x()
 }
 
-func (s *Structure) y() int {
+func (s *StructureSpawn) y() int {
 	return s.Pos().y()
 }
 
-func (s *Structure) roomName() string {
+func (s *StructureSpawn) roomName() string {
 	return s.Pos().roomName()
 }
 
-func (s *Structure) Pos() *RoomPosition {
+func (s *StructureSpawn) Pos() *RoomPosition {
 	if !s.cached["pos"] {
 		ref := s.ref.Get("pos")
 		s.pos = (&RoomPosition{}).deRef(ref).(*RoomPosition)
@@ -51,7 +58,7 @@ func (s *Structure) Pos() *RoomPosition {
 	return s.pos
 }
 
-func (s *Structure) Effects() []Effect {
+func (s *StructureSpawn) Effects() []Effect {
 	if !s.cached["effects"] {
 		s.effects = effects(s.ref)
 		s.cached["effects"] = true
@@ -59,7 +66,7 @@ func (s *Structure) Effects() []Effect {
 	return s.effects
 }
 
-func (s *Structure) Room() *Room {
+func (s *StructureSpawn) Room() *Room {
 	if !s.cached["room"] {
 		s.room = deRefRoom(s.ref.Get("room"))
 		s.cached["room"] = true
@@ -67,7 +74,7 @@ func (s *Structure) Room() *Room {
 	return s.room
 }
 
-func (s *Structure) Hits() int {
+func (s *StructureSpawn) Hits() int {
 	if !s.cached["hits"] {
 		s.hits = s.ref.Get("hits").Int()
 		s.cached["hits"] = true
@@ -75,7 +82,7 @@ func (s *Structure) Hits() int {
 	return s.hits
 }
 
-func (s *Structure) HitsMax() int {
+func (s *StructureSpawn) HitsMax() int {
 	if !s.cached["hitsMax"] {
 		s.hitsMax = s.ref.Get("hitsMax").Int()
 		s.cached["hitsMax"] = true
@@ -83,7 +90,7 @@ func (s *Structure) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *Structure) Id() string {
+func (s *StructureSpawn) Id() string {
 	if !s.cached["id"] {
 		s.id = s.ref.Get("id").String()
 		s.cached["id"] = true
@@ -91,22 +98,26 @@ func (s *Structure) Id() string {
 	return s.id
 }
 
-func (s *Structure) StructureType() StructureConst {
-	if !s.cached["structureType"] {
-		s.structureType = StructureConst(s.ref.Get("structureType").String())
-		s.cached["structureType"] = true
-	}
-	return s.structureType
+func (s *StructureSpawn) StructureType() StructureConst {
+	return STRUCTURE_SPAWN
 }
 
-func (s *Structure) Destroy() ScreepsError {
+func (s *StructureSpawn) Destroy() ScreepsError {
 	return destroy(s.ref)
 }
 
-func (s *Structure) IsActive() bool {
+func (s *StructureSpawn) IsActive() bool {
 	return isActive(s.ref)
 }
 
-func (s *Structure) NotifyWhenAttacked(enabled bool) ScreepsError {
+func (s *StructureSpawn) NotifyWhenAttacked(enabled bool) ScreepsError {
 	return notifyWhenAttacked(s.ref, enabled)
+}
+
+func (s *StructureSpawn) My() bool {
+	return my(s.ref)
+}
+
+func (s *StructureSpawn) Owner() string {
+	return owner(s.ref)
 }

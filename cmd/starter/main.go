@@ -10,11 +10,12 @@ func main() {
 }
 
 var room *rs.Room
+var spawn rs.IRoomPosition
 
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	console.Log("Started once")
 	room = s.Game.Rooms()["W8N3"]
-	spawn := room.Find(rs.FIND_MY_SPAWNS, nil)[0]
+	spawn = room.Find(rs.FIND_MY_SPAWNS, nil)[0]
 	switch spawn.(type) {
 	case *rs.RoomPosition:
 	case *rs.RoomObject:

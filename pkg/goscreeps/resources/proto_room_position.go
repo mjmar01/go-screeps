@@ -21,10 +21,6 @@ func (r *RoomPosition) iRef() js.Value {
 	return r.ref
 }
 
-func (r *RoomPosition) CC() {
-	r.cached = make(map[string]bool)
-}
-
 func (r *RoomPosition) deRef(ref js.Value) IRoomPosition {
 	if ref.IsNull() {
 		return nil

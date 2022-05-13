@@ -12,5 +12,4 @@ func WasmUpdate() {
 
 type IReference interface {
 	iRef() js.Value
-	CC()
 }

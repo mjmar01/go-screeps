@@ -3,7 +3,7 @@ package resources
 import "syscall/js"
 
 type IRoomPosition interface {
-	iRef() js.Value
+	IReference
 	deRef(ref js.Value) IRoomPosition
 
 	x() int

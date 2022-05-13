@@ -12,6 +12,14 @@ type Terrain struct {
 	raw [][]TerrainConst
 }
 
+func (t *Terrain) iRef() js.Value {
+	return t.ref
+}
+
+func (t *Terrain) CC() {
+	t.cached = make(map[string]bool)
+}
+
 func deRefTerrain(ref js.Value) *Terrain {
 	if ref.IsNull() {
 		return nil

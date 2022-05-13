@@ -9,3 +9,8 @@ func WasmUpdate() {
 	jsGlobal = js.Global()
 	jsObject = jsGlobal.Get("Object")
 }
+
+type IReference interface {
+	iRef() js.Value
+	CC()
+}

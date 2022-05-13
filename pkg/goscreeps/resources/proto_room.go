@@ -15,6 +15,14 @@ type Room struct {
 	// TODO *RoomVisual
 }
 
+func (r *Room) iRef() js.Value {
+	return r.ref
+}
+
+func (r *Room) CC() {
+	r.cached = make(map[string]bool)
+}
+
 func deRefRoom(ref js.Value) *Room {
 	if ref.IsNull() {
 		return nil

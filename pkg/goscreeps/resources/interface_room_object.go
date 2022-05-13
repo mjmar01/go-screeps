@@ -1,10 +1,6 @@
 package resources
 
-import "syscall/js"
-
 type IRoomObject interface {
-	iRef() js.Value
-
 	IRoomPosition
 
 	Pos() *RoomPosition

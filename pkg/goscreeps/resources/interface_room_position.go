@@ -4,6 +4,7 @@ import "syscall/js"
 
 type IRoomPosition interface {
 	iRef() js.Value
+	deRef(ref js.Value) IRoomPosition
 
 	x() int
 	y() int
@@ -17,7 +18,6 @@ type FindPathOpts struct {
 	// TODO CostCallback         *CostCallback
 	MaxOps          uint
 	HeuristicWeight float64
-	Serialize       bool
 	MaxRooms        uint
 	Range           uint
 	PlainCost       uint

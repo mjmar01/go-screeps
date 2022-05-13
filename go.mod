@@ -1,3 +1,3 @@
 module github.com/mjmar01/go-screeps
 
-go 1.16
+go 1.18

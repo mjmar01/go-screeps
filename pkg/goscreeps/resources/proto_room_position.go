@@ -13,7 +13,7 @@ type RoomPosition struct {
 
 var roomPositionConstructor = js.Global().Get("RoomPosition")
 
-func deRefRoomPosition(ref js.Value) *RoomPosition {
+func (r *RoomPosition) deRef(ref js.Value) IRoomPosition {
 	if ref.IsNull() {
 		return nil
 	}
@@ -29,7 +29,7 @@ func (r *RoomPosition) iRef() js.Value {
 
 func (r *RoomPosition) x() int {
 	if !r.cached["pX"] {
-		r.pX = r.ref.Get("pX").Int()
+		r.pX = r.ref.Get("x").Int()
 		r.cached["pX"] = true
 	}
 	return r.pX
@@ -37,7 +37,7 @@ func (r *RoomPosition) x() int {
 
 func (r *RoomPosition) y() int {
 	if !r.cached["pY"] {
-		r.pY = r.ref.Get("pY").Int()
+		r.pY = r.ref.Get("y").Int()
 		r.cached["pY"] = true
 	}
 	return r.pY
@@ -45,7 +45,7 @@ func (r *RoomPosition) y() int {
 
 func (r *RoomPosition) roomName() string {
 	if !r.cached["pRoomName"] {
-		r.pRoomName = r.ref.Get("pRoomName").String()
+		r.pRoomName = r.ref.Get("roomName").String()
 		r.cached["pRoomName"] = true
 	}
 	return r.pRoomName
@@ -71,7 +71,7 @@ func (r *RoomPosition) CreateFlag(name string, primary ColorConst, secondary Col
 	return createFlag(r, name, primary, secondary)
 }
 
-func (r *RoomPosition) FindClosestTypeByPath(fType FindObjectConst, opts *FindClosestByPathOpts) IRoomPosition {
+func (r *RoomPosition) FindClosestTypeByPath(fType FindConst, opts *FindClosestByPathOpts) IRoomPosition {
 	return findClosestTypeByPath(r, fType, opts)
 }
 
@@ -79,7 +79,7 @@ func (r *RoomPosition) FindClosestPosByPath(targets []IRoomPosition, opts *FindC
 	return findClosestPosByPath(r, targets, opts)
 }
 
-func (r *RoomPosition) FindClosestTypeByRange(fType FindObjectConst, opts *FindFilterOpts) IRoomPosition {
+func (r *RoomPosition) FindClosestTypeByRange(fType FindConst, opts *FindFilterOpts) IRoomPosition {
 	return findClosestTypeByRange(r, fType, opts)
 }
 
@@ -87,7 +87,7 @@ func (r *RoomPosition) FindClosestPosByRange(targets []IRoomPosition, opts *Find
 	return findClosestPosByRange(r, targets, opts)
 }
 
-func (r *RoomPosition) FindTypeInRange(fType FindObjectConst, maxRange float64, opts *FindFilterOpts) []IRoomPosition {
+func (r *RoomPosition) FindTypeInRange(fType FindConst, maxRange float64, opts *FindFilterOpts) []IRoomPosition {
 	return findTypeInRange(r, fType, maxRange, opts)
 }
 
@@ -103,7 +103,7 @@ func (r *RoomPosition) GetDirectionTo(target IRoomPosition) DirectionConst {
 	return getDirectionTo(r, target)
 }
 
-func (r *RoomPosition) GetRangeTo(target IRoomPosition) float64 {
+func (r *RoomPosition) GetRangeTo(target IRoomPosition) int {
 	return getRangeTo(r, target)
 }
 
@@ -119,10 +119,10 @@ func (r *RoomPosition) IsNearTo(target IRoomPosition) bool {
 	return isNearTo(r, target)
 }
 
-func (r *RoomPosition) Look() []IRoomObject {
+func (r *RoomPosition) Look() []IRoomPosition {
 	return look(r)
 }
 
-func (r *RoomPosition) LookFor(lType LookConst) []IRoomObject {
+func (r *RoomPosition) LookFor(lType LookConst) []IRoomPosition {
 	return lookFor(r, lType)
 }

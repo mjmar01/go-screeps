@@ -73,30 +73,22 @@ func (r *Room) CreateFlag(x, y int, name string, primary ColorConst, secondary C
 	return createFlag(r.GetPositionAt(x, y), name, primary, secondary)
 }
 
-func (r *Room) FindObject(fType FindObjectConst, opts *FindFilterOpts) []IRoomObject {
-	// TODO Filter
-	foundPositions := r.ref.Call("find", int(fType))
-	foundPositionsCount := foundPositions.Length()
-	result := make([]IRoomObject, foundPositionsCount)
-	for i := 0; i < foundPositionsCount; i++ {
-		result[i] = deRefRoomObject(foundPositions.Index(i))
-	}
-	return result
-}
-
-func (r *Room) FindPos(fType FindPosConst, opts *FindFilterOpts) []IRoomPosition {
+func (r *Room) Find(fType FindConst, opts *FindFilterOpts) []IRoomPosition {
 	// TODO Filter
 	foundPositions := r.ref.Call("find", int(fType))
 	foundPositionsCount := foundPositions.Length()
 	result := make([]IRoomPosition, foundPositionsCount)
+	var n IRoomPosition
 	for i := 0; i < foundPositionsCount; i++ {
-		result[i] = deRefRoomPosition(foundPositions.Index(i))
+		ref := foundPositions.Index(i)
+		n = getRoomPosRefType(ref)
+		result[i] = n.deRef(ref)
 	}
 	return result
 }
 
-func (r *Room) FindExitTo(roomName string) FindPosConst {
-	return FindPosConst(r.ref.Call("findExitTo", roomName).Int())
+func (r *Room) FindExitTo(roomName string) FindConst {
+	return FindConst(r.ref.Call("findExitTo", roomName).Int())
 }
 
 func (r *Room) FindPath(from, to IRoomPosition, opts *FindPathOpts) Path {
@@ -109,7 +101,7 @@ func (r *Room) GetEventLog() string {
 	return r.ref.Call("getEventLog", true).String()
 }
 
-func (r *Room) GetPositionAt(x, y int) IRoomPosition {
+func (r *Room) GetPositionAt(x, y int) *RoomPosition {
 	ref := roomPositionConstructor.New(x, y, r.Name())
 	return &RoomPosition{
 		ref:       ref,
@@ -127,16 +119,70 @@ func (r *Room) GetTerrain() *Terrain {
 // TODO Look*
 
 func unpackPath(path js.Value) Path {
-	// TODO
-	return nil
+	pathLength := path.Length()
+	result := make(Path, pathLength)
+	for i := 0; i < pathLength; i++ {
+		step := path.Index(i)
+		result[i] = PathStep{
+			x:         step.Get("x").Int(),
+			y:         step.Get("y").Int(),
+			dx:        step.Get("dx").Int(),
+			dy:        step.Get("dy").Int(),
+			direction: DirectionConst(step.Get("direction").Int()),
+		}
+	}
+	return result
 }
 
 func packPath(path Path) js.Value {
-	// TODO
-	return js.Null()
+	length := len(path)
+	result := make([]interface{}, length)
+	for i := 0; i < length; i++ {
+		step := map[string]interface{}{}
+		step["x"] = path[i].x
+		step["y"] = path[i].y
+		step["dx"] = path[i].dx
+		step["dy"] = path[i].dy
+		step["direction"] = int(path[i].direction)
+		result[i] = step
+	}
+	return js.ValueOf(result)
 }
 
 func packFindPathOpts(opts *FindPathOpts) js.Value {
-	// TODO
-	return js.Null()
+	if opts == nil {
+		return js.Undefined()
+	} else {
+		result := make(map[string]interface{}, 10)
+		result["ignoreCreeps"] = opts.IgnoreCreeps
+		result["ignoreDestructibleStructures"] = opts.IgnoreDestructibleStructures
+		result["ignoreRoads"] = opts.IgnoreRoads
+		result["costCallback"] = js.Undefined() // TODO
+		if opts.MaxOps == 0 {
+			result["maxOps"] = 2000
+		} else {
+			result["maxOps"] = opts.MaxOps
+		}
+		if opts.HeuristicWeight == 0 {
+			result["heuristicWeight"] = 1.2
+		}
+		result["serialize"] = false
+		if opts.MaxRooms == 0 {
+			result["maxRooms"] = 16
+		} else {
+			result["maxRooms"] = opts.MaxRooms
+		}
+		result["range"] = opts.Range
+		if opts.PlainCost == 0 {
+			result["plainCost"] = 1
+		} else {
+			result["plainCost"] = opts.PlainCost
+		}
+		if opts.SwampCost == 0 {
+			result["swampCost"] = 1
+		} else {
+			result["swampCost"] = opts.SwampCost
+		}
+		return js.ValueOf(result)
+	}
 }

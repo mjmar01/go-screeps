@@ -11,7 +11,7 @@ type RoomObject struct {
 	room    *Room
 }
 
-func deRefRoomObject(ref js.Value) *RoomObject {
+func (r *RoomObject) deRef(ref js.Value) IRoomPosition {
 	if ref.IsNull() {
 		return nil
 	}
@@ -28,7 +28,7 @@ func (r *RoomObject) iRef() js.Value {
 func (r *RoomObject) Pos() *RoomPosition {
 	if !r.cached["pos"] {
 		ref := r.ref.Get("pos")
-		r.pos = deRefRoomPosition(ref)
+		r.pos = (&RoomPosition{}).deRef(ref).(*RoomPosition)
 		r.cached["pos"] = true
 	}
 	return r.pos
@@ -37,7 +37,7 @@ func (r *RoomObject) Pos() *RoomPosition {
 func (r *RoomObject) Effects() []Effect {
 	if !r.cached["effects"] {
 		jsEffects := r.ref.Get("effects")
-		effectCount := jsEffects.Get("length").Int()
+		effectCount := jsEffects.Length()
 		result := make([]Effect, effectCount)
 		for i := 0; i < effectCount; i++ {
 			effect := jsEffects.Index(i)

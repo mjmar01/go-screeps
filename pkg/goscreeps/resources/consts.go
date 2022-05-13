@@ -8,8 +8,7 @@ type (
 	DirectionConst       int
 	EffectTypeConst      int
 	ColorConst           int
-	FindObjectConst      int
-	FindPosConst         int
+	FindConst            int
 	TerrainConst         int
 )
 
@@ -58,37 +57,34 @@ const (
 )
 
 const (
-	FIND_EXIT_TOP    FindPosConst = 1
-	FIND_EXIT_RIGHT  FindPosConst = 3
-	FIND_EXIT_BOTTOM FindPosConst = 5
-	FIND_EXIT_LEFT   FindPosConst = 7
-	FIND_EXIT        FindPosConst = 10
-)
-
-const (
-	FIND_CREEPS                     FindObjectConst = 101
-	FIND_MY_CREEPS                  FindObjectConst = 102
-	FIND_HOSTILE_CREEPS             FindObjectConst = 103
-	FIND_SOURCES_ACTIVE             FindObjectConst = 104
-	FIND_SOURCES                    FindObjectConst = 105
-	FIND_DROPPED_RESOURCES          FindObjectConst = 106
-	FIND_STRUCTURES                 FindObjectConst = 107
-	FIND_MY_STRUCTURES              FindObjectConst = 108
-	FIND_HOSTILE_STRUCTURES         FindObjectConst = 109
-	FIND_FLAGS                      FindObjectConst = 110
-	FIND_CONSTRUCTION_SITES         FindObjectConst = 111
-	FIND_MY_SPAWNS                  FindObjectConst = 112
-	FIND_HOSTILE_SPAWNS             FindObjectConst = 113
-	FIND_MY_CONSTRUCTION_SITES      FindObjectConst = 114
-	FIND_HOSTILE_CONSTRUCTION_SITES FindObjectConst = 115
-	FIND_MINERALS                   FindObjectConst = 116
-	FIND_NUKES                      FindObjectConst = 117
-	FIND_TOMBSTONES                 FindObjectConst = 118
-	FIND_POWER_CREEPS               FindObjectConst = 119
-	FIND_MY_POWER_CREEPS            FindObjectConst = 120
-	FIND_HOSTILE_POWER_CREEPS       FindObjectConst = 121
-	FIND_DEPOSITS                   FindObjectConst = 122
-	FIND_RUINS                      FindObjectConst = 123
+	FIND_EXIT_TOP                   FindConst = 1
+	FIND_EXIT_RIGHT                 FindConst = 3
+	FIND_EXIT_BOTTOM                FindConst = 5
+	FIND_EXIT_LEFT                  FindConst = 7
+	FIND_EXIT                       FindConst = 10
+	FIND_CREEPS                     FindConst = 101
+	FIND_MY_CREEPS                  FindConst = 102
+	FIND_HOSTILE_CREEPS             FindConst = 103
+	FIND_SOURCES_ACTIVE             FindConst = 104
+	FIND_SOURCES                    FindConst = 105
+	FIND_DROPPED_RESOURCES          FindConst = 106
+	FIND_STRUCTURES                 FindConst = 107
+	FIND_MY_STRUCTURES              FindConst = 108
+	FIND_HOSTILE_STRUCTURES         FindConst = 109
+	FIND_FLAGS                      FindConst = 110
+	FIND_CONSTRUCTION_SITES         FindConst = 111
+	FIND_MY_SPAWNS                  FindConst = 112
+	FIND_HOSTILE_SPAWNS             FindConst = 113
+	FIND_MY_CONSTRUCTION_SITES      FindConst = 114
+	FIND_HOSTILE_CONSTRUCTION_SITES FindConst = 115
+	FIND_MINERALS                   FindConst = 116
+	FIND_NUKES                      FindConst = 117
+	FIND_TOMBSTONES                 FindConst = 118
+	FIND_POWER_CREEPS               FindConst = 119
+	FIND_MY_POWER_CREEPS            FindConst = 120
+	FIND_HOSTILE_POWER_CREEPS       FindConst = 121
+	FIND_DEPOSITS                   FindConst = 122
+	FIND_RUINS                      FindConst = 123
 )
 
 const (

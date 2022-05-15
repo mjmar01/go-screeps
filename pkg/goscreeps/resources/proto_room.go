@@ -84,7 +84,7 @@ func (r *Room) Find(fType FindConst, opts *FindFilterOpts) []IRoomPosition {
 	result := make([]IRoomPosition, foundPositionsCount)
 	for i := 0; i < foundPositionsCount; i++ {
 		ref := foundPositions.Index(i)
-		result[i] = getRoomPosRefType(ref)
+		result[i] = deRefUnknown(ref).(IRoomPosition)
 	}
 	return result
 }

@@ -98,14 +98,6 @@ func (s *StructureSpawn) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *StructureSpawn) Id() string {
-	if !s.cached["id"] {
-		s.id = jsGet(s.ref, "id").String()
-		s.cached["id"] = true
-	}
-	return s.id
-}
-
 func (s *StructureSpawn) StructureType() StructureConst {
 	return STRUCTURE_SPAWN
 }
@@ -136,6 +128,14 @@ func (s *StructureSpawn) Owner() string {
 		s.cached["owner"] = true
 	}
 	return s.owner
+}
+
+func (s *StructureSpawn) Id() string {
+	if !s.cached["id"] {
+		s.id = jsGet(s.ref, "id").String()
+		s.cached["id"] = true
+	}
+	return s.id
 }
 
 func (s *StructureSpawn) Name() string {

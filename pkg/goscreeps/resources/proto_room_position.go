@@ -157,22 +157,23 @@ func createFlag(src IRoomPosition, name string, primary ColorConst, secondary Co
 	return name, ReturnErr(result.Int())
 }
 
-func getRoomPosRefType(ref js.Value) IRoomPosition {
+func deRefUnknown(ref js.Value) IReference {
 	typeStr := jsCall(ref, "toString").String()
 	matches := re.FindAllString(typeStr, -1)
 	if matches == nil {
-		return &RoomPosition{}
+		panic("Unable to match: \"" + typeStr + "\"")
 	}
 	typeStr = matches[len(matches)-1]
 	typeStr = strings.TrimSpace(typeStr)
-	var result IRoomPosition
+	var result IReference
 	switch typeStr {
 	case "pos":
 		result = &RoomPosition{}
 	case "spawn":
 		result = &StructureSpawn{}
+	// TODO more
 	default:
 		panic("Unknown Type: \"" + typeStr + "\"")
 	}
-	return result.deRef(ref).(IRoomPosition)
+	return result.deRef(ref).(IReference)
 }

@@ -5,7 +5,6 @@ import "syscall/js"
 type IStructure interface {
 	IDamageable
 
-	Id() string
 	StructureType() StructureConst
 
 	Destroy() ScreepsError
@@ -35,14 +34,14 @@ type IOwned interface {
 }
 
 func destroy(ref js.Value) ScreepsError {
-	return ReturnErr(ref.Call("destroy").Int())
+	return ReturnErr(jsCall(ref, "destroy").Int())
 }
 
 func isActive(ref js.Value) bool {
-	return ref.Call("isActive").Bool()
+	return jsCall(ref, "isActive").Bool()
 }
 
 func notifyWhenAttacked(ref js.Value, enabled bool) ScreepsError {
-	result := ref.Call("notifyWhenAttacked", enabled).Int()
+	result := jsCall(ref, "notifyWhenAttacked", enabled).Int()
 	return ReturnErr(result)
 }

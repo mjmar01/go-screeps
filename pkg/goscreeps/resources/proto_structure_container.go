@@ -14,6 +14,8 @@ type StructureContainer struct {
 	hitsMax       int
 	id            string
 	structureType StructureConst
+	my            bool
+	owner         string
 
 	store        *Store
 	ticksToDecay int
@@ -85,14 +87,6 @@ func (s *StructureContainer) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *StructureContainer) Id() string {
-	if !s.cached["id"] {
-		s.id = jsGet(s.ref, "id").String()
-		s.cached["id"] = true
-	}
-	return s.id
-}
-
 func (s *StructureContainer) StructureType() StructureConst {
 	return STRUCTURE_CONTAINER
 }
@@ -107,6 +101,14 @@ func (s *StructureContainer) IsActive() bool {
 
 func (s *StructureContainer) NotifyWhenAttacked(enabled bool) ScreepsError {
 	return notifyWhenAttacked(s.ref, enabled)
+}
+
+func (s *StructureContainer) Id() string {
+	if !s.cached["id"] {
+		s.id = jsGet(s.ref, "id").String()
+		s.cached["id"] = true
+	}
+	return s.id
 }
 
 func (s *StructureContainer) Store() *Store {

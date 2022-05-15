@@ -41,7 +41,20 @@ func (g *Game) WasmUpdate() {
 	g.cached = make(map[string]bool)
 }
 
-// TODO constructionSites, creeps, flags,
+func (g *Game) ConstructionSites() map[string]*ConstructionSite {
+	jsSites := jsGet(g.ref, "constructionSites")
+	entries := jsCall(jsObject, "entries", jsSites)
+	length := jsGet(entries, "length").Int()
+	result := make(map[string]*ConstructionSite, length)
+	for i := 0; i < length; i++ {
+		entry := entries.Index(i)
+		site := (&ConstructionSite{}).deRef(entry.Index(1)).(*ConstructionSite)
+		result[entry.Index(0).String()] = site
+	}
+	return result
+}
+
+// TODO creeps, flags,
 
 func (g *Game) Gcl() GlobalControlLevel {
 	if !g.cached["gcl"] {
@@ -121,7 +134,31 @@ func (g *Game) Shard() Shard {
 	return g.shard
 }
 
-// TODO spawns, structures
+func (g *Game) Spawns() map[string]*StructureSpawn {
+	jsSpawns := jsGet(g.ref, "spawns")
+	entries := jsCall(jsObject, "entries", jsSpawns)
+	length := jsGet(entries, "length").Int()
+	result := make(map[string]*StructureSpawn, length)
+	for i := 0; i < length; i++ {
+		entry := entries.Index(i)
+		site := (&StructureSpawn{}).deRef(entry.Index(1)).(*StructureSpawn)
+		result[entry.Index(0).String()] = site
+	}
+	return result
+}
+
+func (g *Game) Structures() map[string]IStructure {
+	jsSites := jsGet(g.ref, "structures")
+	entries := jsCall(jsObject, "entries", jsSites)
+	length := jsGet(entries, "length").Int()
+	result := make(map[string]IStructure, length)
+	for i := 0; i < length; i++ {
+		entry := entries.Index(i)
+		site := deRefUnknown(entry.Index(1)).(IStructure)
+		result[entry.Index(0).String()] = site
+	}
+	return result
+}
 
 func (g *Game) Time() int {
 	if !g.cached["time"] {

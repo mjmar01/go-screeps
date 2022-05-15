@@ -9,6 +9,7 @@ type ConstructionSite struct {
 	effects []Effect
 	pos     *RoomPosition
 	room    *Room
+	id      string
 
 	my    bool
 	owner string
@@ -82,6 +83,14 @@ func (c *ConstructionSite) Owner() string {
 		c.cached["owner"] = true
 	}
 	return c.owner
+}
+
+func (c *ConstructionSite) Id() string {
+	if !c.cached["id"] {
+		c.id = jsGet(c.ref, "id").String()
+		c.cached["id"] = true
+	}
+	return c.id
 }
 
 func (c *ConstructionSite) Progress() int {

@@ -23,7 +23,7 @@ func (s *StructureContainer) iRef() js.Value {
 	return s.ref
 }
 
-func (s *StructureContainer) deRef(ref js.Value) IRoomPosition {
+func (s *StructureContainer) deRef(ref js.Value) IReference {
 	if ref.IsNull() {
 		return nil
 	}
@@ -47,8 +47,7 @@ func (s *StructureContainer) roomName() string {
 
 func (s *StructureContainer) Pos() *RoomPosition {
 	if !s.cached["pos"] {
-		ref := s.ref.Get("pos")
-		s.pos = (&RoomPosition{}).deRef(ref).(*RoomPosition)
+		s.pos = pos(s.ref)
 		s.cached["pos"] = true
 	}
 	return s.pos
@@ -64,7 +63,7 @@ func (s *StructureContainer) Effects() []Effect {
 
 func (s *StructureContainer) Room() *Room {
 	if !s.cached["room"] {
-		s.room = deRefRoom(s.ref.Get("room"))
+		s.room = (&Room{}).deRef(s.ref).(*Room)
 		s.cached["room"] = true
 	}
 	return s.room
@@ -72,7 +71,7 @@ func (s *StructureContainer) Room() *Room {
 
 func (s *StructureContainer) Hits() int {
 	if !s.cached["hits"] {
-		s.hits = s.ref.Get("hits").Int()
+		s.hits = jsGet(s.ref, "hits").Int()
 		s.cached["hits"] = true
 	}
 	return s.hits
@@ -80,7 +79,7 @@ func (s *StructureContainer) Hits() int {
 
 func (s *StructureContainer) HitsMax() int {
 	if !s.cached["hitsMax"] {
-		s.hitsMax = s.ref.Get("hitsMax").Int()
+		s.hitsMax = jsGet(s.ref, "hitsMax").Int()
 		s.cached["hitsMax"] = true
 	}
 	return s.hitsMax
@@ -88,7 +87,7 @@ func (s *StructureContainer) HitsMax() int {
 
 func (s *StructureContainer) Id() string {
 	if !s.cached["id"] {
-		s.id = s.ref.Get("id").String()
+		s.id = jsGet(s.ref, "id").String()
 		s.cached["id"] = true
 	}
 	return s.id
@@ -112,7 +111,7 @@ func (s *StructureContainer) NotifyWhenAttacked(enabled bool) ScreepsError {
 
 func (s *StructureContainer) Store() *Store {
 	if !s.cached["store"] {
-		s.store = getStore(s.ref)
+		s.store = (&Store{}).deRef(s.ref).(*Store)
 		s.cached["store"] = true
 	}
 	return s.store
@@ -120,7 +119,7 @@ func (s *StructureContainer) Store() *Store {
 
 func (s *StructureContainer) TicksToDecay() int {
 	if !s.cached["ticksToDecay"] {
-		s.ticksToDecay = s.ref.Get("ticksToDecay").Int()
+		s.ticksToDecay = jsGet(s.ref, "ticksToDecay").Int()
 		s.cached["ticksToDecay"] = true
 	}
 	return s.ticksToDecay

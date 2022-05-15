@@ -16,7 +16,7 @@ func (t *Terrain) iRef() js.Value {
 	return t.ref
 }
 
-func deRefTerrain(ref js.Value) *Terrain {
+func (t *Terrain) deRef(ref js.Value) IReference {
 	if ref.IsNull() {
 		return nil
 	}
@@ -27,7 +27,7 @@ func deRefTerrain(ref js.Value) *Terrain {
 }
 
 func NewTerrain(roomName string) *Terrain {
-	result := jsGlobal.Get("Room").Get("Terrain").New(roomName)
+	result := jsGet(jsGet(jsGlobal, "Room"), "Terrain").New(roomName)
 	return &Terrain{
 		ref:    result,
 		cached: make(map[string]bool),
@@ -36,7 +36,7 @@ func NewTerrain(roomName string) *Terrain {
 
 func (t *Terrain) Get(x, y int) TerrainConst {
 	if !(t.cached[strconv.Itoa(x)+":"+strconv.Itoa(y)] || t.cached["raw"]) {
-		t.raw[x][y] = TerrainConst(t.ref.Call("get", x, y).Int())
+		t.raw[x][y] = TerrainConst(jsCall(t.ref, "get", x, y).Int())
 		t.cached[strconv.Itoa(x)+":"+strconv.Itoa(y)] = true
 	}
 	return t.raw[x][y]
@@ -44,7 +44,7 @@ func (t *Terrain) Get(x, y int) TerrainConst {
 
 func (t *Terrain) GetRaw() [][]TerrainConst {
 	if !t.cached["raw"] {
-		jsList := t.ref.Call("getRawBuffer")
+		jsList := jsCall(t.ref, "getRawBuffer")
 		idx := 0
 		for y := 0; y < 50; y++ {
 			for x := 0; x < 50; x++ {

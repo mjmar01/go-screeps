@@ -43,8 +43,8 @@ var (
 	Unknown       ScreepsError = errors.New("ERR_UNKNOWN")
 )
 
-func ReturnErr(code ErrorCode) ScreepsError {
-	switch code {
+func ReturnErr(code int) ScreepsError {
+	switch ErrorCode(code) {
 	case OK:
 		return nil
 	case ERR_NOT_OWNER:

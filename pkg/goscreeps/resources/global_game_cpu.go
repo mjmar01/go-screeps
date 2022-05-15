@@ -101,15 +101,15 @@ func (c Cpu) SetShardLimits(limits map[string]int) ScreepsError {
 	}
 
 	result := c.ref.Call("setShardLimits", jsLimits).Int()
-	return ReturnErr(ErrorCode(result))
+	return ReturnErr(result)
 }
 
 func (c Cpu) Unlock() ScreepsError {
 	result := c.ref.Call("unlock").Int()
-	return ReturnErr(ErrorCode(result))
+	return ReturnErr(result)
 }
 
 func (c Cpu) GeneratePixel() ScreepsError {
 	result := c.ref.Call("generatePixel").Int()
-	return ReturnErr(ErrorCode(result))
+	return ReturnErr(result)
 }

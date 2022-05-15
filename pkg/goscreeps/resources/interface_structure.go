@@ -3,16 +3,21 @@ package resources
 import "syscall/js"
 
 type IStructure interface {
-	IRoomObject
+	IDamageable
 
-	Hits() int
-	HitsMax() int
 	Id() string
 	StructureType() StructureConst
 
 	Destroy() ScreepsError
 	IsActive() bool
 	NotifyWhenAttacked(enabled bool) ScreepsError
+}
+
+type IDamageable interface {
+	IRoomObject
+
+	Hits() int
+	HitsMax() int
 }
 
 type IOwnedStructure interface {
@@ -22,8 +27,15 @@ type IOwnedStructure interface {
 	Owner() string
 }
 
+type IOwned interface {
+	IRoomObject
+
+	My() bool
+	Owner() string
+}
+
 func destroy(ref js.Value) ScreepsError {
-	return ReturnErr(ErrorCode(ref.Call("destroy").Int()))
+	return ReturnErr(ref.Call("destroy").Int())
 }
 
 func isActive(ref js.Value) bool {
@@ -32,13 +44,5 @@ func isActive(ref js.Value) bool {
 
 func notifyWhenAttacked(ref js.Value, enabled bool) ScreepsError {
 	result := ref.Call("notifyWhenAttacked", enabled).Int()
-	return ReturnErr(ErrorCode(result))
-}
-
-func my(ref js.Value) bool {
-	return ref.Get("my").Bool()
-}
-
-func owner(ref js.Value) string {
-	return ref.Get("owner").String()
+	return ReturnErr(result)
 }

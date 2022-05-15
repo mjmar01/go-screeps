@@ -13,7 +13,7 @@ func (s *Store) iRef() js.Value {
 	return s.ref
 }
 
-func deRefStore(ref js.Value) *Store {
+func (s *Store) deRef(ref js.Value) IReference {
 	if ref.IsNull() {
 		return nil
 	}
@@ -25,8 +25,8 @@ func deRefStore(ref js.Value) *Store {
 
 func (s *Store) Contents() map[ResourceConst]int {
 	if !s.cached["contents"] {
-		entries := jsObject.Call("entries", s.ref)
-		length := entries.Get("length").Int()
+		entries := jsCall(jsObject, "entries", s.ref)
+		length := jsGet(entries, "length").Int()
 		result := make(map[ResourceConst]int, length)
 		for i := 0; i < length; i++ {
 			entry := entries.Index(i)
@@ -43,9 +43,9 @@ func (s *Store) Contents() map[ResourceConst]int {
 func (s *Store) GetCapacity(resource *ResourceConst) int {
 	var result js.Value
 	if resource == nil {
-		result = s.ref.Call("getCapacity")
+		result = jsCall(s.ref, "getCapacity")
 	} else {
-		result = s.ref.Call("getCapacity", string(*resource))
+		result = jsCall(s.ref, "getCapacity", string(*resource))
 	}
 	return result.Int()
 }
@@ -53,9 +53,9 @@ func (s *Store) GetCapacity(resource *ResourceConst) int {
 func (s *Store) GetFreeCapacity(resource *ResourceConst) int {
 	var result js.Value
 	if resource == nil {
-		result = s.ref.Call("getFreeCapacity")
+		result = jsCall(s.ref, "getFreeCapacity")
 	} else {
-		result = s.ref.Call("getFreeCapacity", string(*resource))
+		result = jsCall(s.ref, "getFreeCapacity", string(*resource))
 	}
 	return result.Int()
 }
@@ -63,13 +63,9 @@ func (s *Store) GetFreeCapacity(resource *ResourceConst) int {
 func (s *Store) GetUsedCapacity(resource *ResourceConst) int {
 	var result js.Value
 	if resource == nil {
-		result = s.ref.Call("getUsedCapacity")
+		result = jsCall(s.ref, "getUsedCapacity")
 	} else {
-		result = s.ref.Call("getUsedCapacity", string(*resource))
+		result = jsCall(s.ref, "getUsedCapacity", string(*resource))
 	}
 	return result.Int()
-}
-
-func getStore(ref js.Value) *Store {
-	return deRefStore(ref.Get("store"))
 }

@@ -100,7 +100,7 @@ func (g *Game) Rooms() map[string]*Room {
 			entry := entries.Index(i)
 			key := entry.Index(0).String()
 			value := entry.Index(1)
-			result[key] = deRefRoom(value)
+			result[key] = (&Room{}).deRef(value).(*Room)
 		}
 		g.rooms = result
 		g.cached["rooms"] = true

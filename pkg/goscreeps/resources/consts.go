@@ -6,6 +6,7 @@ type (
 	StructureConst       string
 	LookConst            string
 	ResourceConst        string
+	BodyPart             string
 	DirectionConst       int
 	EffectTypeConst      int
 	ColorConst           int
@@ -236,4 +237,15 @@ const (
 	RESOURCE_SPIRIT                       ResourceConst = "spirit"
 	RESOURCE_EMANATION                    ResourceConst = "emanation"
 	RESOURCE_ESSENCE                      ResourceConst = "essence"
+)
+
+const (
+	MOVE          BodyPart = "move"
+	WORK          BodyPart = "work"
+	CARRY         BodyPart = "carry"
+	ATTACK        BodyPart = "attack"
+	RANGED_ATTACK BodyPart = "ranged_attack"
+	TOUGH         BodyPart = "tough"
+	HEAL          BodyPart = "heal"
+	CLAIM         BodyPart = "claim"
 )

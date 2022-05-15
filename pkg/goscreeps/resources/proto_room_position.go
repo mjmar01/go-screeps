@@ -2,6 +2,7 @@ package resources
 
 import (
 	"regexp"
+	"strings"
 	"syscall/js"
 )
 
@@ -21,7 +22,7 @@ func (r *RoomPosition) iRef() js.Value {
 	return r.ref
 }
 
-func (r *RoomPosition) deRef(ref js.Value) IRoomPosition {
+func (r *RoomPosition) deRef(ref js.Value) IReference {
 	if ref.IsNull() {
 		return nil
 	}
@@ -33,7 +34,7 @@ func (r *RoomPosition) deRef(ref js.Value) IRoomPosition {
 
 func (r *RoomPosition) x() int {
 	if !r.cached["pX"] {
-		r.pX = r.ref.Get("x").Int()
+		r.pX = jsGet(r.ref, "x").Int()
 		r.cached["pX"] = true
 	}
 	return r.pX
@@ -41,7 +42,7 @@ func (r *RoomPosition) x() int {
 
 func (r *RoomPosition) y() int {
 	if !r.cached["pY"] {
-		r.pY = r.ref.Get("y").Int()
+		r.pY = jsGet(r.ref, "y").Int()
 		r.cached["pY"] = true
 	}
 	return r.pY
@@ -49,7 +50,7 @@ func (r *RoomPosition) y() int {
 
 func (r *RoomPosition) roomName() string {
 	if !r.cached["pRoomName"] {
-		r.pRoomName = r.ref.Get("roomName").String()
+		r.pRoomName = jsGet(r.ref, "roomName").String()
 		r.cached["pRoomName"] = true
 	}
 	return r.pRoomName
@@ -138,8 +139,8 @@ func createConstructionSite(src IRoomPosition, sType StructureConst, name string
 	} else {
 		jsName = js.ValueOf(name)
 	}
-	result := src.iRef().Call("createConstructionSite", string(sType), jsName).Int()
-	return ReturnErr(ErrorCode(result))
+	result := jsCall(src.iRef(), "createConstructionSite", string(sType), jsName).Int()
+	return ReturnErr(result)
 }
 
 func createFlag(src IRoomPosition, name string, primary ColorConst, secondary ColorConst) (string, ScreepsError) {
@@ -149,24 +150,29 @@ func createFlag(src IRoomPosition, name string, primary ColorConst, secondary Co
 	} else {
 		jsName = js.ValueOf(name)
 	}
-	result := src.iRef().Call("createFlag", jsName, int(primary), int(secondary))
+	result := jsCall(src.iRef(), "createFlag", jsName, int(primary), int(secondary))
 	if result.Type() == js.TypeString {
 		return result.String(), nil
 	}
-	return name, ReturnErr(ErrorCode(result.Int()))
+	return name, ReturnErr(result.Int())
 }
 
 func getRoomPosRefType(ref js.Value) IRoomPosition {
-	typeStr := ref.Call("toString").String()
+	typeStr := jsCall(ref, "toString").String()
 	matches := re.FindAllString(typeStr, -1)
 	if matches == nil {
 		return &RoomPosition{}
 	}
 	typeStr = matches[len(matches)-1]
+	typeStr = strings.TrimSpace(typeStr)
+	var result IRoomPosition
 	switch typeStr {
 	case "pos":
-		return &RoomPosition{}
+		result = &RoomPosition{}
+	case "spawn":
+		result = &StructureSpawn{}
 	default:
-		return &RoomObject{}
+		panic("Unknown Type: \"" + typeStr + "\"")
 	}
+	return result.deRef(ref).(IRoomPosition)
 }

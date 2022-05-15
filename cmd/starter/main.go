@@ -10,19 +10,13 @@ func main() {
 }
 
 var room *rs.Room
-var spawn rs.IRoomPosition
+var spawn *rs.StructureSpawn
 
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	console.Log("Started once")
 	room = s.Game.Rooms()["W8N3"]
-	spawn = room.Find(rs.FIND_MY_SPAWNS, nil)[0]
-	switch spawn.(type) {
-	case *rs.RoomPosition:
-	case *rs.RoomObject:
-	}
-
-	pos := room.GetPositionAt(15, 15)
-	err := pos.CreateConstructionSite(rs.STRUCTURE_EXTENSION, "")
+	spawn = room.Find(rs.FIND_MY_SPAWNS, nil)[0].(*rs.StructureSpawn)
+	err := spawn.SpawnCreep(rs.CreepBody{rs.WORK, rs.CARRY, rs.MOVE}, "Frank", nil)
 	if err != nil {
 		console.Log(err.Error())
 	}

@@ -10,10 +10,10 @@ func main() {
 
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	console.Log("Started once")
-	sites := s.Game.Spawns()
+	sites := s.Game.Structures()
 	console.Log(len(sites))
 	for k, site := range sites {
-		console.Log(k, site.Id(), string(site.StructureType()))
+		console.Log(k, string(site.StructureType()))
 	}
 }
 

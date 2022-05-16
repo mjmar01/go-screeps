@@ -66,8 +66,11 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 			}()
 			loop(s, console)
 		}()
+		console.Log(s.Game.Cpu().GetUsed())
 		s.RawMemory.WasmSave()
-		runtime.GC()
+		console.Log(s.Game.Cpu().GetUsed())
+		//runtime.GC()
+		console.Log(s.Game.Cpu().GetUsed())
 	}
 }
 

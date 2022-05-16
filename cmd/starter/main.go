@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/mjmar01/go-screeps/pkg/goscreeps"
+	rs "github.com/mjmar01/go-screeps/pkg/goscreeps/resources"
 )
 
 func main() {
@@ -10,13 +11,23 @@ func main() {
 
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	console.Log("Started once")
-	sites := s.Game.Structures()
-	console.Log(len(sites))
-	for k, site := range sites {
-		console.Log(k, string(site.StructureType()))
+	spawns := s.Game.Spawns()
+	for _, spawn := range spawns {
+		err := spawn.SpawnCreep(rs.CreepBody{rs.WORK, rs.WORK, rs.CARRY, rs.MOVE}, "Jeff", nil)
+		if err != nil {
+			console.Log(err.Error())
+		}
 	}
 }
 
 func loop(s goscreeps.Screeps, console goscreeps.Console) {
-	//console.Log("Starting loop", s.Game.Time())
+	console.Log(s.Game.Cpu().GetUsed())
+	flags := s.Game.Flags()
+	console.Log(s.Game.Cpu().GetUsed())
+	for _, flag := range flags {
+		console.Log(flag.Name())
+		flag.Remove()
+	}
+	console.Log(s.Game.Cpu().GetUsed())
+	console.Log()
 }

@@ -54,7 +54,31 @@ func (g *Game) ConstructionSites() map[string]*ConstructionSite {
 	return result
 }
 
-// TODO creeps, flags,
+func (g *Game) Creeps() map[string]*Creep {
+	jsCreeps := jsGet(g.ref, "creeps")
+	entries := jsCall(jsObject, "entries", jsCreeps)
+	length := jsGet(entries, "length").Int()
+	result := make(map[string]*Creep, length)
+	for i := 0; i < length; i++ {
+		entry := entries.Index(i)
+		site := (&Creep{}).deRef(entry.Index(1)).(*Creep)
+		result[entry.Index(0).String()] = site
+	}
+	return result
+}
+
+func (g *Game) Flags() map[string]*Flag {
+	jsFlags := jsGet(g.ref, "flags")
+	entries := jsCall(jsObject, "entries", jsFlags)
+	length := jsGet(entries, "length").Int()
+	result := make(map[string]*Flag, length)
+	for i := 0; i < length; i++ {
+		entry := entries.Index(i)
+		site := (&Flag{}).deRef(entry.Index(1)).(*Flag)
+		result[entry.Index(0).String()] = site
+	}
+	return result
+}
 
 func (g *Game) Gcl() GlobalControlLevel {
 	if !g.cached["gcl"] {

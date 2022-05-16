@@ -38,7 +38,7 @@ func (c *ConstructionSite) x() int {
 }
 
 func (c *ConstructionSite) y() int {
-	return c.Pos().x()
+	return c.Pos().y()
 }
 
 func (c *ConstructionSite) roomName() string {

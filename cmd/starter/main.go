@@ -21,13 +21,9 @@ func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 }
 
 func loop(s goscreeps.Screeps, console goscreeps.Console) {
-	console.Log(s.Game.Cpu().GetUsed())
 	flags := s.Game.Flags()
-	console.Log(s.Game.Cpu().GetUsed())
 	for _, flag := range flags {
 		console.Log(flag.Name())
 		flag.Remove()
 	}
-	console.Log(s.Game.Cpu().GetUsed())
-	console.Log()
 }

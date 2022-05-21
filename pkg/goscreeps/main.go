@@ -15,6 +15,7 @@ type Screeps struct {
 }
 
 var loopTrigger chan bool
+var cpu resources.Cpu
 
 func Start(onReset, loop func(s Screeps, console Console)) {
 	defer func() {
@@ -43,6 +44,7 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 	s.RawMemory.WasmUpdate()
 	s.Memory.WasmUpdate()
 	s.InterShardMemory.WasmUpdate()
+	cpu = s.Game.Cpu()
 	func() {
 		defer func() {
 			if r := recover(); r != nil {
@@ -66,11 +68,13 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 			}()
 			loop(s, console)
 		}()
-		console.Log(s.Game.Cpu().GetUsed())
 		s.RawMemory.WasmSave()
-		console.Log(s.Game.Cpu().GetUsed())
-		//runtime.GC()
-		console.Log(s.Game.Cpu().GetUsed())
+		stats := cpu.GetHeapStatistics()
+		used := float64(stats.TotalHeapSize) / float64(stats.TotalHeapSize+stats.TotalAvailableSize)
+		if used >= 0.9 {
+			runtime.GC()
+			console.Log("goscreeps: cleared garbage")
+		}
 	}
 }
 

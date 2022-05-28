@@ -1,8 +1,6 @@
 package resources
 
 import (
-	"regexp"
-	"strings"
 	"syscall/js"
 )
 
@@ -16,7 +14,6 @@ type RoomPosition struct {
 }
 
 var roomPositionConstructor = js.Global().Get("RoomPosition")
-var re = regexp.MustCompile("[a-zA-Z0-9\\-\\_\\#\\]]+?\\s")
 
 func (r *RoomPosition) iRef() js.Value {
 	return r.ref
@@ -155,25 +152,4 @@ func createFlag(src IRoomPosition, name string, primary ColorConst, secondary Co
 		return result.String(), nil
 	}
 	return name, ReturnErr(result.Int())
-}
-
-func deRefUnknown(ref js.Value) IReference {
-	typeStr := jsCall(ref, "toString").String()
-	matches := re.FindAllString(typeStr, -1)
-	if matches == nil {
-		panic("Unable to match: \"" + typeStr + "\"")
-	}
-	typeStr = matches[len(matches)-1]
-	typeStr = strings.TrimSpace(typeStr)
-	var result IReference
-	switch typeStr {
-	case "pos":
-		result = &RoomPosition{}
-	case "spawn":
-		result = &StructureSpawn{}
-	// TODO more
-	default:
-		panic("Unknown Type: \"" + typeStr + "\"")
-	}
-	return result.deRef(ref).(IReference)
 }

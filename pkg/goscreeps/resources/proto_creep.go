@@ -23,6 +23,8 @@ type Creep struct {
 	ticksToLive int
 }
 
+type CreepBody []BodyPart
+
 func (c *Creep) iRef() js.Value {
 	return c.ref
 }
@@ -161,4 +163,161 @@ func (c *Creep) Store() *Store {
 	return c.store
 }
 
-// TODO Body, functions
+func (c *Creep) Body() CreepBody {
+	if !c.cached["body"] {
+		jsBody := jsGet(c.ref, "body")
+		partCount := jsBody.Length()
+		result := make(CreepBody, partCount)
+		for i := 0; i < partCount; i++ {
+			part := jsBody.Index(i)
+			result[i] = BodyPart(part.String())
+		}
+		c.body = result
+		c.cached["body"] = true
+	}
+	return c.body
+}
+
+func (c *Creep) Attack(target IDamageable) ScreepsError {
+	result := jsCall(c.ref, "attack", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) AttackController(target *Controller) ScreepsError {
+	result := jsCall(c.ref, "attackController", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Build(target ConstructionSite) ScreepsError {
+	result := jsCall(c.ref, "build", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) CancelOrder(methodName string) ScreepsError {
+	result := jsCall(c.ref, "cancelOrder", methodName).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) ClaimController(target *Controller) ScreepsError {
+	result := jsCall(c.ref, "claimController", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Dismantle(target IStructure) ScreepsError {
+	result := jsCall(c.ref, "dismantle", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Drop(resource ResourceConst, amount int) ScreepsError {
+	jsAmount := js.ValueOf(amount)
+	if amount == -1 {
+		jsAmount = js.Undefined()
+	}
+	result := jsCall(c.ref, "drop", string(resource), jsAmount).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) GenerateSafeMode(target *Controller) ScreepsError {
+	result := jsCall(c.ref, "generateSafeMode", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) GetActiveBodyParts(partType BodyPart) int {
+	return jsCall(c.ref, "getActiveBodyparts", string(partType)).Int()
+}
+
+func (c *Creep) Harvest(target IRoomPosition) ScreepsError {
+	result := jsCall(c.ref, "harvest", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Heal(target Creep) ScreepsError {
+	result := jsCall(c.ref, "heal", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Move(direction DirectionConst) ScreepsError {
+	result := jsCall(c.ref, "move", int(direction)).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) MoveTo(target IRoomPosition) ScreepsError { // TODO opts
+	result := jsCall(c.ref, "moveTo", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) MoveByPath(path Path) ScreepsError {
+	result := jsCall(c.ref, "moveByPath", packPath(path)).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) NotifyWhenAttacked(enabled bool) ScreepsError {
+	result := jsCall(c.ref, "notifyWhenAttacked", enabled).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Pickup(target IRoomObject) ScreepsError {
+	result := jsCall(c.ref, "pickup", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Pull(target Creep) ScreepsError {
+	result := jsCall(c.ref, "pull", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) RangedAttack(target IDamageable) ScreepsError {
+	result := jsCall(c.ref, "rangedAttack", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) RangedHeal(target Creep) ScreepsError {
+	result := jsCall(c.ref, "rangedHeal", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) RangedMassAttack() ScreepsError {
+	result := jsCall(c.ref, "rangedMassAttack").Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Repair(target IStructure) ScreepsError {
+	result := jsCall(c.ref, "repair", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) ReserveController(target *Controller) ScreepsError {
+	result := jsCall(c.ref, "reserveController", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Say(message string, public bool) ScreepsError {
+	result := jsCall(c.ref, "say", message, public).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) SignController(target *Controller, text string) ScreepsError {
+	result := jsCall(c.ref, "signController", target.iRef(), text).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Suicide() ScreepsError {
+	result := jsCall(c.ref, "suicide").Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) Transfer(target IRoomObject, resource ResourceConst, amount int) ScreepsError {
+	jsAmount := js.ValueOf(amount)
+	if amount == -1 {
+		jsAmount = js.Undefined()
+	}
+	result := jsCall(c.ref, "transfer", target.iRef(), string(resource), jsAmount).Int()
+	return ReturnErr(result)
+}
+
+func (c *Creep) UpgradeController(target *Controller) ScreepsError {
+	result := jsCall(c.ref, "upgradeController", target.iRef()).Int()
+	return ReturnErr(result)
+}
+
+// TODO functions

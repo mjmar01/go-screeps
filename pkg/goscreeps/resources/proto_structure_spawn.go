@@ -30,8 +30,6 @@ type SpawnCreepOpts struct {
 	Directions []DirectionConst
 }
 
-type CreepBody []BodyPart
-
 func (s *StructureSpawn) iRef() js.Value {
 	return s.ref
 }

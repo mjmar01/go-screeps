@@ -8,6 +8,7 @@ type (
 	CResource        string
 	CBodyPart        string
 	CDirection       int
+	CDensity         int
 	CEffect          int
 	CColor           int
 	CFind            int
@@ -248,4 +249,11 @@ const (
 	TOUGH         CBodyPart = "tough"
 	HEAL          CBodyPart = "heal"
 	CLAIM         CBodyPart = "claim"
+)
+
+const (
+	DENSITY_LOW      CDensity = 1
+	DENSITY_MODERATE CDensity = 2
+	DENSITY_HIGH     CDensity = 3
+	DENSITY_ULTRA    CDensity = 4
 )

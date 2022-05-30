@@ -42,6 +42,8 @@ func deRefUnknown(ref js.Value) IReference {
 		result = &RoomPosition{}
 	case "spawn":
 		result = &StructureSpawn{}
+	case "source":
+		result = &Source{}
 	// TODO more
 	default:
 		panic("Unknown Type: \"" + typeStr + "\"")

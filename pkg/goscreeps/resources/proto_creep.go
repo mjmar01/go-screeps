@@ -157,7 +157,7 @@ func (c *Creep) TicksToLive() int {
 
 func (c *Creep) Store() *Store {
 	if !c.cached["store"] {
-		c.store = (&Store{}).deRef(c.ref).(*Store)
+		c.store = (&Store{}).deRef(jsGet(c.ref, "store")).(*Store)
 		c.cached["store"] = true
 	}
 	return c.store

@@ -6,7 +6,7 @@ type Room struct {
 	ref    js.Value
 	cached map[string]bool
 
-	// TODO *Controller
+	controller              *Controller
 	energyAvailable         int
 	energyCapacityAvailable int
 	name                    string
@@ -29,7 +29,13 @@ func (r *Room) deRef(ref js.Value) IReference {
 	}
 }
 
-// TODO Controller()
+func (r *Room) Controller() *Controller {
+	if !r.cached["controller"] {
+		r.controller = (&Controller{}).deRef(jsGet(r.ref, "controller")).(*Controller)
+		r.cached["controller"] = true
+	}
+	return r.controller
+}
 
 func (r *Room) EnergyAvailable() int {
 	if !r.cached["energyAvailable"] {

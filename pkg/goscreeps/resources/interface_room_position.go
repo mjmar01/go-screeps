@@ -24,7 +24,7 @@ type FindPathOpts struct {
 type FindClosestByPathOpts struct {
 	FindPathOpts
 	// TODO Filter
-	Algorithm AlgorithmConst
+	Algorithm CAlgorithm
 }
 
 type FindFilterOpts struct {
@@ -37,5 +37,5 @@ type PathStep struct {
 	y         int
 	dx        int
 	dy        int
-	direction DirectionConst
+	direction CDirection
 }

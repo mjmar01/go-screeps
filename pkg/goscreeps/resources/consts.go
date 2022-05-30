@@ -1,251 +1,251 @@
 package resources
 
 type (
-	AccountResourceConst string
-	AlgorithmConst       string
-	StructureConst       string
-	LookConst            string
-	ResourceConst        string
-	BodyPart             string
-	DirectionConst       int
-	EffectTypeConst      int
-	ColorConst           int
-	FindConst            int
-	TerrainConst         int
+	CAccountResource string
+	CAlgorithm       string
+	CStructure       string
+	CLook            string
+	CResource        string
+	CBodyPart        string
+	CDirection       int
+	CEffect          int
+	CColor           int
+	CFind            int
+	CTerrain         int
 )
 
 const (
-	SUBSCRIPTION_TOKEN AccountResourceConst = "token"
-	CPU_UNLOCK         AccountResourceConst = "cpuUnlock"
-	PIXEL              AccountResourceConst = "pixel"
-	ACCESS_KEY         AccountResourceConst = "accessKey"
+	SUBSCRIPTION_TOKEN CAccountResource = "token"
+	CPU_UNLOCK         CAccountResource = "cpuUnlock"
+	PIXEL              CAccountResource = "pixel"
+	ACCESS_KEY         CAccountResource = "accessKey"
 )
 
 const (
-	PWR_GENERATE_OPS       EffectTypeConst = 1
-	PWR_OPERATE_SPAWN      EffectTypeConst = 2
-	PWR_OPERATE_TOWER      EffectTypeConst = 3
-	PWR_OPERATE_STORAGE    EffectTypeConst = 4
-	PWR_OPERATE_LAB        EffectTypeConst = 5
-	PWR_OPERATE_EXTENSION  EffectTypeConst = 6
-	PWR_OPERATE_OBSERVER   EffectTypeConst = 7
-	PWR_OPERATE_TERMINAL   EffectTypeConst = 8
-	PWR_DISRUPT_SPAWN      EffectTypeConst = 9
-	PWR_DISRUPT_TOWER      EffectTypeConst = 10
-	PWR_DISRUPT_SOURCE     EffectTypeConst = 11
-	PWR_SHIELD             EffectTypeConst = 12
-	PWR_REGEN_SOURCE       EffectTypeConst = 13
-	PWR_REGEN_MINERAL      EffectTypeConst = 14
-	PWR_DISRUPT_TERMINAL   EffectTypeConst = 15
-	PWR_OPERATE_POWER      EffectTypeConst = 16
-	PWR_FORTIFY            EffectTypeConst = 17
-	PWR_OPERATE_CONTROLLER EffectTypeConst = 18
-	PWR_OPERATE_FACTORY    EffectTypeConst = 19
-	EFFECT_INVULNERABILITY EffectTypeConst = 1001
-	EFFECT_COLLAPSE_TIMER  EffectTypeConst = 1002
+	PWR_GENERATE_OPS       CEffect = 1
+	PWR_OPERATE_SPAWN      CEffect = 2
+	PWR_OPERATE_TOWER      CEffect = 3
+	PWR_OPERATE_STORAGE    CEffect = 4
+	PWR_OPERATE_LAB        CEffect = 5
+	PWR_OPERATE_EXTENSION  CEffect = 6
+	PWR_OPERATE_OBSERVER   CEffect = 7
+	PWR_OPERATE_TERMINAL   CEffect = 8
+	PWR_DISRUPT_SPAWN      CEffect = 9
+	PWR_DISRUPT_TOWER      CEffect = 10
+	PWR_DISRUPT_SOURCE     CEffect = 11
+	PWR_SHIELD             CEffect = 12
+	PWR_REGEN_SOURCE       CEffect = 13
+	PWR_REGEN_MINERAL      CEffect = 14
+	PWR_DISRUPT_TERMINAL   CEffect = 15
+	PWR_OPERATE_POWER      CEffect = 16
+	PWR_FORTIFY            CEffect = 17
+	PWR_OPERATE_CONTROLLER CEffect = 18
+	PWR_OPERATE_FACTORY    CEffect = 19
+	EFFECT_INVULNERABILITY CEffect = 1001
+	EFFECT_COLLAPSE_TIMER  CEffect = 1002
 )
 
 const (
-	COLOR_RED    ColorConst = 1
-	COLOR_PURPLE ColorConst = 2
-	COLOR_BLUE   ColorConst = 3
-	COLOR_CYAN   ColorConst = 4
-	COLOR_GREEN  ColorConst = 5
-	COLOR_YELLOW ColorConst = 6
-	COLOR_ORANGE ColorConst = 7
-	COLOR_BROWN  ColorConst = 8
-	COLOR_GREY   ColorConst = 9
-	COLOR_WHITE  ColorConst = 10
+	COLOR_RED    CColor = 1
+	COLOR_PURPLE CColor = 2
+	COLOR_BLUE   CColor = 3
+	COLOR_CYAN   CColor = 4
+	COLOR_GREEN  CColor = 5
+	COLOR_YELLOW CColor = 6
+	COLOR_ORANGE CColor = 7
+	COLOR_BROWN  CColor = 8
+	COLOR_GREY   CColor = 9
+	COLOR_WHITE  CColor = 10
 )
 
 const (
-	FIND_EXIT_TOP                   FindConst = 1
-	FIND_EXIT_RIGHT                 FindConst = 3
-	FIND_EXIT_BOTTOM                FindConst = 5
-	FIND_EXIT_LEFT                  FindConst = 7
-	FIND_EXIT                       FindConst = 10
-	FIND_CREEPS                     FindConst = 101
-	FIND_MY_CREEPS                  FindConst = 102
-	FIND_HOSTILE_CREEPS             FindConst = 103
-	FIND_SOURCES_ACTIVE             FindConst = 104
-	FIND_SOURCES                    FindConst = 105
-	FIND_DROPPED_RESOURCES          FindConst = 106
-	FIND_STRUCTURES                 FindConst = 107
-	FIND_MY_STRUCTURES              FindConst = 108
-	FIND_HOSTILE_STRUCTURES         FindConst = 109
-	FIND_FLAGS                      FindConst = 110
-	FIND_CONSTRUCTION_SITES         FindConst = 111
-	FIND_MY_SPAWNS                  FindConst = 112
-	FIND_HOSTILE_SPAWNS             FindConst = 113
-	FIND_MY_CONSTRUCTION_SITES      FindConst = 114
-	FIND_HOSTILE_CONSTRUCTION_SITES FindConst = 115
-	FIND_MINERALS                   FindConst = 116
-	FIND_NUKES                      FindConst = 117
-	FIND_TOMBSTONES                 FindConst = 118
-	FIND_POWER_CREEPS               FindConst = 119
-	FIND_MY_POWER_CREEPS            FindConst = 120
-	FIND_HOSTILE_POWER_CREEPS       FindConst = 121
-	FIND_DEPOSITS                   FindConst = 122
-	FIND_RUINS                      FindConst = 123
+	FIND_EXIT_TOP                   CFind = 1
+	FIND_EXIT_RIGHT                 CFind = 3
+	FIND_EXIT_BOTTOM                CFind = 5
+	FIND_EXIT_LEFT                  CFind = 7
+	FIND_EXIT                       CFind = 10
+	FIND_CREEPS                     CFind = 101
+	FIND_MY_CREEPS                  CFind = 102
+	FIND_HOSTILE_CREEPS             CFind = 103
+	FIND_SOURCES_ACTIVE             CFind = 104
+	FIND_SOURCES                    CFind = 105
+	FIND_DROPPED_RESOURCES          CFind = 106
+	FIND_STRUCTURES                 CFind = 107
+	FIND_MY_STRUCTURES              CFind = 108
+	FIND_HOSTILE_STRUCTURES         CFind = 109
+	FIND_FLAGS                      CFind = 110
+	FIND_CONSTRUCTION_SITES         CFind = 111
+	FIND_MY_SPAWNS                  CFind = 112
+	FIND_HOSTILE_SPAWNS             CFind = 113
+	FIND_MY_CONSTRUCTION_SITES      CFind = 114
+	FIND_HOSTILE_CONSTRUCTION_SITES CFind = 115
+	FIND_MINERALS                   CFind = 116
+	FIND_NUKES                      CFind = 117
+	FIND_TOMBSTONES                 CFind = 118
+	FIND_POWER_CREEPS               CFind = 119
+	FIND_MY_POWER_CREEPS            CFind = 120
+	FIND_HOSTILE_POWER_CREEPS       CFind = 121
+	FIND_DEPOSITS                   CFind = 122
+	FIND_RUINS                      CFind = 123
 )
 
 const (
-	ALGORITHM_ASTAR    AlgorithmConst = "astar"
-	ALGORITHM_DIJKSTRA AlgorithmConst = "dijkstra"
+	ALGORITHM_ASTAR    CAlgorithm = "astar"
+	ALGORITHM_DIJKSTRA CAlgorithm = "dijkstra"
 )
 
 const (
-	TOP          DirectionConst = 1
-	TOP_RIGHT    DirectionConst = 2
-	RIGHT        DirectionConst = 3
-	BOTTOM_RIGHT DirectionConst = 4
-	BOTTOM       DirectionConst = 5
-	BOTTOM_LEFT  DirectionConst = 6
-	LEFT         DirectionConst = 7
-	TOP_LEFT     DirectionConst = 8
+	TOP          CDirection = 1
+	TOP_RIGHT    CDirection = 2
+	RIGHT        CDirection = 3
+	BOTTOM_RIGHT CDirection = 4
+	BOTTOM       CDirection = 5
+	BOTTOM_LEFT  CDirection = 6
+	LEFT         CDirection = 7
+	TOP_LEFT     CDirection = 8
 )
 
 const (
-	STRUCTURE_SPAWN        StructureConst = "spawn"
-	STRUCTURE_EXTENSION    StructureConst = "extension"
-	STRUCTURE_ROAD         StructureConst = "road"
-	STRUCTURE_WALL         StructureConst = "constructedWall"
-	STRUCTURE_RAMPART      StructureConst = "rampart"
-	STRUCTURE_KEEPER_LAIR  StructureConst = "keeperLair"
-	STRUCTURE_PORTAL       StructureConst = "portal"
-	STRUCTURE_CONTROLLER   StructureConst = "controller"
-	STRUCTURE_LINK         StructureConst = "link"
-	STRUCTURE_STORAGE      StructureConst = "storage"
-	STRUCTURE_TOWER        StructureConst = "tower"
-	STRUCTURE_OBSERVER     StructureConst = "observer"
-	STRUCTURE_POWER_BANK   StructureConst = "powerBank"
-	STRUCTURE_POWER_SPAWN  StructureConst = "powerSpawn"
-	STRUCTURE_EXTRACTOR    StructureConst = "extractor"
-	STRUCTURE_LAB          StructureConst = "lab"
-	STRUCTURE_TERMINAL     StructureConst = "terminal"
-	STRUCTURE_CONTAINER    StructureConst = "container"
-	STRUCTURE_NUKER        StructureConst = "nuker"
-	STRUCTURE_FACTORY      StructureConst = "factory"
-	STRUCTURE_INVADER_CORE StructureConst = "invaderCore"
+	STRUCTURE_SPAWN        CStructure = "spawn"
+	STRUCTURE_EXTENSION    CStructure = "extension"
+	STRUCTURE_ROAD         CStructure = "road"
+	STRUCTURE_WALL         CStructure = "constructedWall"
+	STRUCTURE_RAMPART      CStructure = "rampart"
+	STRUCTURE_KEEPER_LAIR  CStructure = "keeperLair"
+	STRUCTURE_PORTAL       CStructure = "portal"
+	STRUCTURE_CONTROLLER   CStructure = "controller"
+	STRUCTURE_LINK         CStructure = "link"
+	STRUCTURE_STORAGE      CStructure = "storage"
+	STRUCTURE_TOWER        CStructure = "tower"
+	STRUCTURE_OBSERVER     CStructure = "observer"
+	STRUCTURE_POWER_BANK   CStructure = "powerBank"
+	STRUCTURE_POWER_SPAWN  CStructure = "powerSpawn"
+	STRUCTURE_EXTRACTOR    CStructure = "extractor"
+	STRUCTURE_LAB          CStructure = "lab"
+	STRUCTURE_TERMINAL     CStructure = "terminal"
+	STRUCTURE_CONTAINER    CStructure = "container"
+	STRUCTURE_NUKER        CStructure = "nuker"
+	STRUCTURE_FACTORY      CStructure = "factory"
+	STRUCTURE_INVADER_CORE CStructure = "invaderCore"
 )
 
 const (
-	LOOK_CREEPS             LookConst = "creep"
-	LOOK_ENERGY             LookConst = "energy"
-	LOOK_RESOURCES          LookConst = "resource"
-	LOOK_SOURCES            LookConst = "source"
-	LOOK_MINERALS           LookConst = "mineral"
-	LOOK_DEPOSITS           LookConst = "deposit"
-	LOOK_STRUCTURES         LookConst = "structure"
-	LOOK_FLAGS              LookConst = "flag"
-	LOOK_CONSTRUCTION_SITES LookConst = "constructionSite"
-	LOOK_NUKES              LookConst = "nuke"
-	LOOK_TERRAIN            LookConst = "terrain"
-	LOOK_TOMBSTONES         LookConst = "tombstone"
-	LOOK_POWER_CREEPS       LookConst = "powerCreep"
-	LOOK_RUINS              LookConst = "ruin"
+	LOOK_CREEPS             CLook = "creep"
+	LOOK_ENERGY             CLook = "energy"
+	LOOK_RESOURCES          CLook = "resource"
+	LOOK_SOURCES            CLook = "source"
+	LOOK_MINERALS           CLook = "mineral"
+	LOOK_DEPOSITS           CLook = "deposit"
+	LOOK_STRUCTURES         CLook = "structure"
+	LOOK_FLAGS              CLook = "flag"
+	LOOK_CONSTRUCTION_SITES CLook = "constructionSite"
+	LOOK_NUKES              CLook = "nuke"
+	LOOK_TERRAIN            CLook = "terrain"
+	LOOK_TOMBSTONES         CLook = "tombstone"
+	LOOK_POWER_CREEPS       CLook = "powerCreep"
+	LOOK_RUINS              CLook = "ruin"
 )
 
 const (
-	TERRAIN_MASK_WALL  TerrainConst = 1
-	TERRAIN_MASK_SWAMP TerrainConst = 2
-	TERRAIN_MASK_LAVA  TerrainConst = 4
+	TERRAIN_MASK_WALL  CTerrain = 1
+	TERRAIN_MASK_SWAMP CTerrain = 2
+	TERRAIN_MASK_LAVA  CTerrain = 4
 )
 
 const (
-	RESOURCE_ENERGY                       ResourceConst = "energy"
-	RESOURCE_POWER                        ResourceConst = "power"
-	RESOURCE_HYDROGEN                     ResourceConst = "H"
-	RESOURCE_OXYGEN                       ResourceConst = "O"
-	RESOURCE_UTRIUM                       ResourceConst = "U"
-	RESOURCE_LEMERGIUM                    ResourceConst = "L"
-	RESOURCE_KEANIUM                      ResourceConst = "K"
-	RESOURCE_ZYNTHIUM                     ResourceConst = "Z"
-	RESOURCE_CATALYST                     ResourceConst = "X"
-	RESOURCE_GHODIUM                      ResourceConst = "G"
-	RESOURCE_SILICON                      ResourceConst = "silicon"
-	RESOURCE_METAL                        ResourceConst = "metal"
-	RESOURCE_BIOMASS                      ResourceConst = "biomass"
-	RESOURCE_MIST                         ResourceConst = "mist"
-	RESOURCE_HYDROXIDE                    ResourceConst = "OH"
-	RESOURCE_ZYNTHIUM_KEANITE             ResourceConst = "ZK"
-	RESOURCE_UTRIUM_LEMERGITE             ResourceConst = "UL"
-	RESOURCE_UTRIUM_HYDRIDE               ResourceConst = "UH"
-	RESOURCE_UTRIUM_OXIDE                 ResourceConst = "UO"
-	RESOURCE_KEANIUM_HYDRIDE              ResourceConst = "KH"
-	RESOURCE_KEANIUM_OXIDE                ResourceConst = "KO"
-	RESOURCE_LEMERGIUM_HYDRIDE            ResourceConst = "LH"
-	RESOURCE_LEMERGIUM_OXIDE              ResourceConst = "LO"
-	RESOURCE_ZYNTHIUM_HYDRIDE             ResourceConst = "ZH"
-	RESOURCE_ZYNTHIUM_OXIDE               ResourceConst = "ZO"
-	RESOURCE_GHODIUM_HYDRIDE              ResourceConst = "GH"
-	RESOURCE_GHODIUM_OXIDE                ResourceConst = "GO"
-	RESOURCE_UTRIUM_ACID                  ResourceConst = "UH2O"
-	RESOURCE_UTRIUM_ALKALIDE              ResourceConst = "UHO2"
-	RESOURCE_KEANIUM_ACID                 ResourceConst = "KH2O"
-	RESOURCE_KEANIUM_ALKALIDE             ResourceConst = "KHO2"
-	RESOURCE_LEMERGIUM_ACID               ResourceConst = "LH2O"
-	RESOURCE_LEMERGIUM_ALKALIDE           ResourceConst = "LHO2"
-	RESOURCE_ZYNTHIUM_ACID                ResourceConst = "ZH2O"
-	RESOURCE_ZYNTHIUM_ALKALIDE            ResourceConst = "ZHO2"
-	RESOURCE_GHODIUM_ACID                 ResourceConst = "GH2O"
-	RESOURCE_GHODIUM_ALKALIDE             ResourceConst = "GHO2"
-	RESOURCE_CATALYZED_UTRIUM_ACID        ResourceConst = "XUH2O"
-	RESOURCE_CATALYZED_UTRIUM_ALKALIDE    ResourceConst = "XUHO2"
-	RESOURCE_CATALYZED_KEANIUM_ACID       ResourceConst = "XKH2O"
-	RESOURCE_CATALYZED_KEANIUM_ALKALIDE   ResourceConst = "XKHO2"
-	RESOURCE_CATALYZED_LEMERGIUM_ACID     ResourceConst = "XLH2O"
-	RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE ResourceConst = "XLHO2"
-	RESOURCE_CATALYZED_ZYNTHIUM_ACID      ResourceConst = "XZH2O"
-	RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE  ResourceConst = "XZHO2"
-	RESOURCE_CATALYZED_GHODIUM_ACID       ResourceConst = "XGH2O"
-	RESOURCE_CATALYZED_GHODIUM_ALKALIDE   ResourceConst = "XGHO2"
-	RESOURCE_OPS                          ResourceConst = "ops"
-	RESOURCE_UTRIUM_BAR                   ResourceConst = "utrium_bar"
-	RESOURCE_LEMERGIUM_BAR                ResourceConst = "lemergium_bar"
-	RESOURCE_ZYNTHIUM_BAR                 ResourceConst = "zynthium_bar"
-	RESOURCE_KEANIUM_BAR                  ResourceConst = "keanium_bar"
-	RESOURCE_GHODIUM_MELT                 ResourceConst = "ghodium_melt"
-	RESOURCE_OXIDANT                      ResourceConst = "oxidant"
-	RESOURCE_REDUCTANT                    ResourceConst = "reductant"
-	RESOURCE_PURIFIER                     ResourceConst = "purifier"
-	RESOURCE_BATTERY                      ResourceConst = "battery"
-	RESOURCE_COMPOSITE                    ResourceConst = "composite"
-	RESOURCE_CRYSTAL                      ResourceConst = "crystal"
-	RESOURCE_LIQUID                       ResourceConst = "liquid"
-	RESOURCE_WIRE                         ResourceConst = "wire"
-	RESOURCE_SWITCH                       ResourceConst = "switch"
-	RESOURCE_TRANSISTOR                   ResourceConst = "transistor"
-	RESOURCE_MICROCHIP                    ResourceConst = "microchip"
-	RESOURCE_CIRCUIT                      ResourceConst = "circuit"
-	RESOURCE_DEVICE                       ResourceConst = "device"
-	RESOURCE_CELL                         ResourceConst = "cell"
-	RESOURCE_PHLEGM                       ResourceConst = "phlegm"
-	RESOURCE_TISSUE                       ResourceConst = "tissue"
-	RESOURCE_MUSCLE                       ResourceConst = "muscle"
-	RESOURCE_ORGANOID                     ResourceConst = "organoid"
-	RESOURCE_ORGANISM                     ResourceConst = "organism"
-	RESOURCE_ALLOY                        ResourceConst = "alloy"
-	RESOURCE_TUBE                         ResourceConst = "tube"
-	RESOURCE_FIXTURES                     ResourceConst = "fixtures"
-	RESOURCE_FRAME                        ResourceConst = "frame"
-	RESOURCE_HYDRAULICS                   ResourceConst = "hydraulics"
-	RESOURCE_MACHINE                      ResourceConst = "machine"
-	RESOURCE_CONDENSATE                   ResourceConst = "condensate"
-	RESOURCE_CONCENTRATE                  ResourceConst = "concentrate"
-	RESOURCE_EXTRACT                      ResourceConst = "extract"
-	RESOURCE_SPIRIT                       ResourceConst = "spirit"
-	RESOURCE_EMANATION                    ResourceConst = "emanation"
-	RESOURCE_ESSENCE                      ResourceConst = "essence"
+	RESOURCE_ENERGY                       CResource = "energy"
+	RESOURCE_POWER                        CResource = "power"
+	RESOURCE_HYDROGEN                     CResource = "H"
+	RESOURCE_OXYGEN                       CResource = "O"
+	RESOURCE_UTRIUM                       CResource = "U"
+	RESOURCE_LEMERGIUM                    CResource = "L"
+	RESOURCE_KEANIUM                      CResource = "K"
+	RESOURCE_ZYNTHIUM                     CResource = "Z"
+	RESOURCE_CATALYST                     CResource = "X"
+	RESOURCE_GHODIUM                      CResource = "G"
+	RESOURCE_SILICON                      CResource = "silicon"
+	RESOURCE_METAL                        CResource = "metal"
+	RESOURCE_BIOMASS                      CResource = "biomass"
+	RESOURCE_MIST                         CResource = "mist"
+	RESOURCE_HYDROXIDE                    CResource = "OH"
+	RESOURCE_ZYNTHIUM_KEANITE             CResource = "ZK"
+	RESOURCE_UTRIUM_LEMERGITE             CResource = "UL"
+	RESOURCE_UTRIUM_HYDRIDE               CResource = "UH"
+	RESOURCE_UTRIUM_OXIDE                 CResource = "UO"
+	RESOURCE_KEANIUM_HYDRIDE              CResource = "KH"
+	RESOURCE_KEANIUM_OXIDE                CResource = "KO"
+	RESOURCE_LEMERGIUM_HYDRIDE            CResource = "LH"
+	RESOURCE_LEMERGIUM_OXIDE              CResource = "LO"
+	RESOURCE_ZYNTHIUM_HYDRIDE             CResource = "ZH"
+	RESOURCE_ZYNTHIUM_OXIDE               CResource = "ZO"
+	RESOURCE_GHODIUM_HYDRIDE              CResource = "GH"
+	RESOURCE_GHODIUM_OXIDE                CResource = "GO"
+	RESOURCE_UTRIUM_ACID                  CResource = "UH2O"
+	RESOURCE_UTRIUM_ALKALIDE              CResource = "UHO2"
+	RESOURCE_KEANIUM_ACID                 CResource = "KH2O"
+	RESOURCE_KEANIUM_ALKALIDE             CResource = "KHO2"
+	RESOURCE_LEMERGIUM_ACID               CResource = "LH2O"
+	RESOURCE_LEMERGIUM_ALKALIDE           CResource = "LHO2"
+	RESOURCE_ZYNTHIUM_ACID                CResource = "ZH2O"
+	RESOURCE_ZYNTHIUM_ALKALIDE            CResource = "ZHO2"
+	RESOURCE_GHODIUM_ACID                 CResource = "GH2O"
+	RESOURCE_GHODIUM_ALKALIDE             CResource = "GHO2"
+	RESOURCE_CATALYZED_UTRIUM_ACID        CResource = "XUH2O"
+	RESOURCE_CATALYZED_UTRIUM_ALKALIDE    CResource = "XUHO2"
+	RESOURCE_CATALYZED_KEANIUM_ACID       CResource = "XKH2O"
+	RESOURCE_CATALYZED_KEANIUM_ALKALIDE   CResource = "XKHO2"
+	RESOURCE_CATALYZED_LEMERGIUM_ACID     CResource = "XLH2O"
+	RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE CResource = "XLHO2"
+	RESOURCE_CATALYZED_ZYNTHIUM_ACID      CResource = "XZH2O"
+	RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE  CResource = "XZHO2"
+	RESOURCE_CATALYZED_GHODIUM_ACID       CResource = "XGH2O"
+	RESOURCE_CATALYZED_GHODIUM_ALKALIDE   CResource = "XGHO2"
+	RESOURCE_OPS                          CResource = "ops"
+	RESOURCE_UTRIUM_BAR                   CResource = "utrium_bar"
+	RESOURCE_LEMERGIUM_BAR                CResource = "lemergium_bar"
+	RESOURCE_ZYNTHIUM_BAR                 CResource = "zynthium_bar"
+	RESOURCE_KEANIUM_BAR                  CResource = "keanium_bar"
+	RESOURCE_GHODIUM_MELT                 CResource = "ghodium_melt"
+	RESOURCE_OXIDANT                      CResource = "oxidant"
+	RESOURCE_REDUCTANT                    CResource = "reductant"
+	RESOURCE_PURIFIER                     CResource = "purifier"
+	RESOURCE_BATTERY                      CResource = "battery"
+	RESOURCE_COMPOSITE                    CResource = "composite"
+	RESOURCE_CRYSTAL                      CResource = "crystal"
+	RESOURCE_LIQUID                       CResource = "liquid"
+	RESOURCE_WIRE                         CResource = "wire"
+	RESOURCE_SWITCH                       CResource = "switch"
+	RESOURCE_TRANSISTOR                   CResource = "transistor"
+	RESOURCE_MICROCHIP                    CResource = "microchip"
+	RESOURCE_CIRCUIT                      CResource = "circuit"
+	RESOURCE_DEVICE                       CResource = "device"
+	RESOURCE_CELL                         CResource = "cell"
+	RESOURCE_PHLEGM                       CResource = "phlegm"
+	RESOURCE_TISSUE                       CResource = "tissue"
+	RESOURCE_MUSCLE                       CResource = "muscle"
+	RESOURCE_ORGANOID                     CResource = "organoid"
+	RESOURCE_ORGANISM                     CResource = "organism"
+	RESOURCE_ALLOY                        CResource = "alloy"
+	RESOURCE_TUBE                         CResource = "tube"
+	RESOURCE_FIXTURES                     CResource = "fixtures"
+	RESOURCE_FRAME                        CResource = "frame"
+	RESOURCE_HYDRAULICS                   CResource = "hydraulics"
+	RESOURCE_MACHINE                      CResource = "machine"
+	RESOURCE_CONDENSATE                   CResource = "condensate"
+	RESOURCE_CONCENTRATE                  CResource = "concentrate"
+	RESOURCE_EXTRACT                      CResource = "extract"
+	RESOURCE_SPIRIT                       CResource = "spirit"
+	RESOURCE_EMANATION                    CResource = "emanation"
+	RESOURCE_ESSENCE                      CResource = "essence"
 )
 
 const (
-	MOVE          BodyPart = "move"
-	WORK          BodyPart = "work"
-	CARRY         BodyPart = "carry"
-	ATTACK        BodyPart = "attack"
-	RANGED_ATTACK BodyPart = "ranged_attack"
-	TOUGH         BodyPart = "tough"
-	HEAL          BodyPart = "heal"
-	CLAIM         BodyPart = "claim"
+	MOVE          CBodyPart = "move"
+	WORK          CBodyPart = "work"
+	CARRY         CBodyPart = "carry"
+	ATTACK        CBodyPart = "attack"
+	RANGED_ATTACK CBodyPart = "ranged_attack"
+	TOUGH         CBodyPart = "tough"
+	HEAL          CBodyPart = "heal"
+	CLAIM         CBodyPart = "claim"
 )

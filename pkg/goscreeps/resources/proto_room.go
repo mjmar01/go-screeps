@@ -75,15 +75,15 @@ func (r *Room) DeserializePath(path string) Path {
 	return unpackPath(deserializedPath)
 }
 
-func (r *Room) CreateConstructionSite(x, y int, sType StructureConst, name string) ScreepsError {
+func (r *Room) CreateConstructionSite(x, y int, sType CStructure, name string) error {
 	return createConstructionSite(r.GetPositionAt(x, y), sType, name)
 }
 
-func (r *Room) CreateFlag(x, y int, name string, primary ColorConst, secondary ColorConst) (string, ScreepsError) {
+func (r *Room) CreateFlag(x, y int, name string, primary CColor, secondary CColor) (string, error) {
 	return createFlag(r.GetPositionAt(x, y), name, primary, secondary)
 }
 
-func (r *Room) Find(fType FindConst, opts *FindFilterOpts) []IRoomPosition {
+func (r *Room) Find(fType CFind, opts *FindFilterOpts) []IRoomPosition {
 	// TODO Filter
 	foundPositions := jsCall(r.ref, "find", int(fType))
 	foundPositionsCount := foundPositions.Length()
@@ -95,8 +95,8 @@ func (r *Room) Find(fType FindConst, opts *FindFilterOpts) []IRoomPosition {
 	return result
 }
 
-func (r *Room) FindExitTo(roomName string) FindConst {
-	return FindConst(jsCall(r.ref, "findExitTo", roomName).Int())
+func (r *Room) FindExitTo(roomName string) CFind {
+	return CFind(jsCall(r.ref, "findExitTo", roomName).Int())
 }
 
 func (r *Room) FindPath(from, to IRoomPosition, opts *FindPathOpts) Path {
@@ -136,7 +136,7 @@ func unpackPath(path js.Value) Path {
 			y:         jsGet(step, "y").Int(),
 			dx:        jsGet(step, "dx").Int(),
 			dy:        jsGet(step, "dy").Int(),
-			direction: DirectionConst(jsGet(step, "direction").Int()),
+			direction: CDirection(jsGet(step, "direction").Int()),
 		}
 	}
 	return result

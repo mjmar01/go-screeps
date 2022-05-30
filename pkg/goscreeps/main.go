@@ -8,10 +8,7 @@ import (
 )
 
 type Screeps struct {
-	Game             *resources.Game
-	RawMemory        *resources.RawMemory
-	InterShardMemory *resources.InterShardMemory
-	Memory           *resources.Memory
+	Game *resources.Game
 }
 
 var loopTrigger chan bool
@@ -35,15 +32,9 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 	js.Global().Set("runLoop", runLoop)
 
 	s := Screeps{
-		Game:             new(resources.Game),
-		RawMemory:        new(resources.RawMemory),
-		InterShardMemory: new(resources.InterShardMemory),
-		Memory:           new(resources.Memory),
+		Game: new(resources.Game),
 	}
 	s.Game.WasmUpdate()
-	s.RawMemory.WasmUpdate()
-	s.Memory.WasmUpdate()
-	s.InterShardMemory.WasmUpdate()
 	cpu = s.Game.Cpu()
 	func() {
 		defer func() {
@@ -57,8 +48,6 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 	for {
 		<-loopTrigger
 		s.Game.WasmUpdate()
-		s.RawMemory.WasmUpdate()
-		s.Memory.WasmUpdate()
 		func() {
 			defer func() {
 				if r := recover(); r != nil {
@@ -68,7 +57,6 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 			}()
 			loop(s, console)
 		}()
-		s.RawMemory.WasmSave()
 		stats := cpu.GetHeapStatistics()
 		used := float64(stats.TotalHeapSize) / float64(stats.TotalHeapSize+stats.TotalAvailableSize)
 		if used >= 0.9 {

@@ -5,11 +5,11 @@ import "syscall/js"
 type IStructure interface {
 	IDamageable
 
-	StructureType() StructureConst
+	StructureType() CStructure
 
-	Destroy() ScreepsError
+	Destroy() error
 	IsActive() bool
-	NotifyWhenAttacked(enabled bool) ScreepsError
+	NotifyWhenAttacked(enabled bool) error
 }
 
 type IDamageable interface {
@@ -33,15 +33,15 @@ type IOwned interface {
 	Owner() string
 }
 
-func destroy(ref js.Value) ScreepsError {
-	return ReturnErr(jsCall(ref, "destroy").Int())
+func destroy(ref js.Value) error {
+	return returnErr(jsCall(ref, "destroy").Int())
 }
 
 func isActive(ref js.Value) bool {
 	return jsCall(ref, "isActive").Bool()
 }
 
-func notifyWhenAttacked(ref js.Value, enabled bool) ScreepsError {
+func notifyWhenAttacked(ref js.Value, enabled bool) error {
 	result := jsCall(ref, "notifyWhenAttacked", enabled).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }

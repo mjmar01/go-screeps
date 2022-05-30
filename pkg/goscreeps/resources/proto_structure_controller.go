@@ -14,7 +14,7 @@ type Controller struct {
 	room    *Room
 
 	id                string
-	structureType     StructureConst
+	structureType     CStructure
 	my                bool
 	owner             string
 	isPowerEnabled    bool
@@ -100,11 +100,11 @@ func (c *Controller) HitsMax() int {
 	return 0
 }
 
-func (c *Controller) StructureType() StructureConst {
+func (c *Controller) StructureType() CStructure {
 	return STRUCTURE_CONTROLLER
 }
 
-func (c *Controller) Destroy() ScreepsError {
+func (c *Controller) Destroy() error {
 	return nil
 }
 
@@ -112,7 +112,7 @@ func (c *Controller) IsActive() bool {
 	return true
 }
 
-func (c *Controller) NotifyWhenAttacked(enabled bool) ScreepsError {
+func (c *Controller) NotifyWhenAttacked(enabled bool) error {
 	return notifyWhenAttacked(c.ref, enabled)
 }
 
@@ -238,11 +238,11 @@ func (c *Controller) UpgradeBlocked() int {
 	return c.upgradeBlocked
 }
 
-func (c *Controller) ActivateSafeMode() ScreepsError {
+func (c *Controller) ActivateSafeMode() error {
 	result := jsCall(c.ref, "activateSafeMode").Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
-func (c *Controller) Unclaim() ScreepsError {
+func (c *Controller) Unclaim() error {
 	result := jsCall(c.ref, "unclaim").Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }

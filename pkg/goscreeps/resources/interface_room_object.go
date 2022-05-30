@@ -11,7 +11,7 @@ type IRoomObject interface {
 }
 
 type Effect struct {
-	Effect         EffectTypeConst
+	Effect         CEffect
 	Level          int
 	TicksRemaining int
 }
@@ -28,7 +28,7 @@ func effects(src js.Value) []Effect {
 	for i := 0; i < effectCount; i++ {
 		effect := jsEffects.Index(i)
 		result[i] = Effect{
-			Effect:         EffectTypeConst(effect.Get("effect").Int()),
+			Effect:         CEffect(effect.Get("effect").Int()),
 			TicksRemaining: effect.Get("ticksRemaining").Int(),
 		}
 		level := effect.Get("level")

@@ -13,7 +13,7 @@ type StructureContainer struct {
 	hits          int
 	hitsMax       int
 	id            string
-	structureType StructureConst
+	structureType CStructure
 	my            bool
 	owner         string
 
@@ -87,11 +87,11 @@ func (s *StructureContainer) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *StructureContainer) StructureType() StructureConst {
+func (s *StructureContainer) StructureType() CStructure {
 	return STRUCTURE_CONTAINER
 }
 
-func (s *StructureContainer) Destroy() ScreepsError {
+func (s *StructureContainer) Destroy() error {
 	return destroy(s.ref)
 }
 
@@ -99,7 +99,7 @@ func (s *StructureContainer) IsActive() bool {
 	return isActive(s.ref)
 }
 
-func (s *StructureContainer) NotifyWhenAttacked(enabled bool) ScreepsError {
+func (s *StructureContainer) NotifyWhenAttacked(enabled bool) error {
 	return notifyWhenAttacked(s.ref, enabled)
 }
 

@@ -10,8 +10,8 @@ type Flag struct {
 	pos     *RoomPosition
 	room    *Room
 
-	color          ColorConst
-	secondaryColor ColorConst
+	color          CColor
+	secondaryColor CColor
 	name           string
 }
 
@@ -73,17 +73,17 @@ func (f *Flag) Name() string {
 	return f.name
 }
 
-func (f *Flag) Color() ColorConst {
+func (f *Flag) Color() CColor {
 	if !f.cached["color"] {
-		f.color = ColorConst(jsGet(f.ref, "color").Int())
+		f.color = CColor(jsGet(f.ref, "color").Int())
 		f.cached["color"] = true
 	}
 	return f.color
 }
 
-func (f *Flag) SecondaryColor() ColorConst {
+func (f *Flag) SecondaryColor() CColor {
 	if !f.cached["secondaryColor"] {
-		f.secondaryColor = ColorConst(jsGet(f.ref, "secondaryColor").Int())
+		f.secondaryColor = CColor(jsGet(f.ref, "secondaryColor").Int())
 		f.cached["secondaryColor"] = true
 	}
 	return f.secondaryColor
@@ -93,12 +93,12 @@ func (f *Flag) Remove() {
 	jsCall(f.ref, "remove")
 }
 
-func (f *Flag) SetColor(primary, secondary ColorConst) ScreepsError {
+func (f *Flag) SetColor(primary, secondary CColor) error {
 	result := jsCall(f.ref, "setColor", int(primary), int(secondary)).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
 
-func (f *Flag) SetPos(pos IRoomPosition) ScreepsError {
+func (f *Flag) SetPos(pos IRoomPosition) error {
 	result := jsCall(f.ref, "setPosition", pos.iRef()).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }

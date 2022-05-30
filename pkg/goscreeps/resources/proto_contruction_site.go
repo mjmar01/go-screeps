@@ -16,7 +16,7 @@ type ConstructionSite struct {
 
 	progress      int
 	progressTotal int
-	structureType StructureConst
+	structureType CStructure
 }
 
 func (c *ConstructionSite) iRef() js.Value {
@@ -108,9 +108,9 @@ func (c *ConstructionSite) ProgressTotal() int {
 	return c.progressTotal
 }
 
-func (c *ConstructionSite) StructureType() StructureConst {
+func (c *ConstructionSite) StructureType() CStructure {
 	if !c.cached["structureType"] {
-		c.structureType = StructureConst(jsGet(c.ref, "structureType").String())
+		c.structureType = CStructure(jsGet(c.ref, "structureType").String())
 		c.cached["structureType"] = true
 	}
 	return c.structureType

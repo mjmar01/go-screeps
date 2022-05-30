@@ -13,7 +13,7 @@ type StructureSpawn struct {
 	hits          int
 	hitsMax       int
 	id            string
-	structureType StructureConst
+	structureType CStructure
 
 	my    bool
 	owner string
@@ -27,7 +27,7 @@ type SpawnCreepOpts struct {
 	Memory js.Value
 	// TODO EnergyStructures []SpawnOrExtension
 	DryRun     bool
-	Directions []DirectionConst
+	Directions []CDirection
 }
 
 func (s *StructureSpawn) iRef() js.Value {
@@ -96,11 +96,11 @@ func (s *StructureSpawn) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *StructureSpawn) StructureType() StructureConst {
+func (s *StructureSpawn) StructureType() CStructure {
 	return STRUCTURE_SPAWN
 }
 
-func (s *StructureSpawn) Destroy() ScreepsError {
+func (s *StructureSpawn) Destroy() error {
 	return destroy(s.ref)
 }
 
@@ -108,7 +108,7 @@ func (s *StructureSpawn) IsActive() bool {
 	return isActive(s.ref)
 }
 
-func (s *StructureSpawn) NotifyWhenAttacked(enabled bool) ScreepsError {
+func (s *StructureSpawn) NotifyWhenAttacked(enabled bool) error {
 	return notifyWhenAttacked(s.ref, enabled)
 }
 
@@ -160,14 +160,14 @@ func (s *StructureSpawn) Store() *Store {
 	return s.store
 }
 
-func (s *StructureSpawn) SpawnCreep(body CreepBody, name string, opts *SpawnCreepOpts) ScreepsError {
+func (s *StructureSpawn) SpawnCreep(body CreepBody, name string, opts *SpawnCreepOpts) error {
 	jsBody := make([]interface{}, len(body))
 	for i, part := range body {
 		jsBody[i] = string(part)
 	}
 	jsOpts := packSpawnCreepOpts(opts)
 	result := jsCall(s.ref, "spawnCreep", jsBody, name, jsOpts).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
 
 // TODO recycle, renewCreep

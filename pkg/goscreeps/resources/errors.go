@@ -3,7 +3,6 @@ package resources
 import "errors"
 
 type ErrorCode int
-type ScreepsError error
 
 const (
 	OK                        ErrorCode = 0
@@ -26,24 +25,24 @@ const (
 )
 
 var (
-	NotOwner      ScreepsError = errors.New("ERR_NOT_OWNER")
-	NoPath        ScreepsError = errors.New("ERR_NO_PATH")
-	NameExists    ScreepsError = errors.New("ERR_NAME_EXISTS")
-	Busy          ScreepsError = errors.New("ERR_BUSY")
-	NotFound      ScreepsError = errors.New("ERR_NOT_FOUND")
-	NotEnough     ScreepsError = errors.New("ERR_NOT_ENOUGH_ENERGY|ERR_NOT_ENOUGH_RESOURCES|ERR_NOT_ENOUGH_EXTENSIONS")
-	InvalidTarget ScreepsError = errors.New("ERR_INVALID_TARGET")
-	Full          ScreepsError = errors.New("ERR_FULL")
-	NotInRange    ScreepsError = errors.New("ERR_NOT_IN_RANGE")
-	InvalidArgs   ScreepsError = errors.New("ERR_INVALID_ARGS")
-	Tired         ScreepsError = errors.New("ERR_TIRED")
-	NoBodypart    ScreepsError = errors.New("ERR_NO_BODYPART")
-	RclNotEnough  ScreepsError = errors.New("ERR_RCL_NOT_ENOUGH")
-	GclNotEnough  ScreepsError = errors.New("ERR_GCL_NOT_ENOUGH")
-	Unknown       ScreepsError = errors.New("ERR_UNKNOWN")
+	NotOwner      error = errors.New("ERR_NOT_OWNER")
+	NoPath        error = errors.New("ERR_NO_PATH")
+	NameExists    error = errors.New("ERR_NAME_EXISTS")
+	Busy          error = errors.New("ERR_BUSY")
+	NotFound      error = errors.New("ERR_NOT_FOUND")
+	NotEnough     error = errors.New("ERR_NOT_ENOUGH_ENERGY|ERR_NOT_ENOUGH_RESOURCES|ERR_NOT_ENOUGH_EXTENSIONS")
+	InvalidTarget error = errors.New("ERR_INVALID_TARGET")
+	Full          error = errors.New("ERR_FULL")
+	NotInRange    error = errors.New("ERR_NOT_IN_RANGE")
+	InvalidArgs   error = errors.New("ERR_INVALID_ARGS")
+	Tired         error = errors.New("ERR_TIRED")
+	NoBodypart    error = errors.New("ERR_NO_BODYPART")
+	RclNotEnough  error = errors.New("ERR_RCL_NOT_ENOUGH")
+	GclNotEnough  error = errors.New("ERR_GCL_NOT_ENOUGH")
+	Unknown       error = errors.New("ERR_UNKNOWN")
 )
 
-func ReturnErr(code int) ScreepsError {
+func returnErr(code int) error {
 	switch ErrorCode(code) {
 	case OK:
 		return nil

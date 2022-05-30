@@ -11,7 +11,7 @@ type Game struct {
 	gcl GlobalControlLevel
 	gpl GlobalPowerLevel
 
-	resources map[AccountResourceConst]int
+	resources map[CAccountResource]int
 	rooms     map[string]*Room
 
 	shard Shard
@@ -108,16 +108,16 @@ func (g *Game) Gpl() GlobalPowerLevel {
 
 // TODO map, market, powerCreeps
 
-func (g *Game) Resources() map[AccountResourceConst]int {
+func (g *Game) Resources() map[CAccountResource]int {
 	if !g.cached["resources"] {
 		jsResources := g.ref.Get("resources")
 
 		entries := jsObject.Call("entries", jsResources)
 		length := entries.Get("length").Int()
-		result := make(map[AccountResourceConst]int, length)
+		result := make(map[CAccountResource]int, length)
 		for i := 0; i < length; i++ {
 			entry := entries.Index(i)
-			key := AccountResourceConst(entry.Index(0).String())
+			key := CAccountResource(entry.Index(0).String())
 			value := entry.Index(1).Int()
 			result[key] = value
 		}

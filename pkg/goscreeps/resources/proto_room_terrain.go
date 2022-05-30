@@ -9,7 +9,7 @@ type Terrain struct {
 	ref    js.Value
 	cached map[string]bool
 
-	raw [][]TerrainConst
+	raw [][]CTerrain
 }
 
 func (t *Terrain) iRef() js.Value {
@@ -34,21 +34,21 @@ func NewTerrain(roomName string) *Terrain {
 	}
 }
 
-func (t *Terrain) Get(x, y int) TerrainConst {
+func (t *Terrain) Get(x, y int) CTerrain {
 	if !(t.cached[strconv.Itoa(x)+":"+strconv.Itoa(y)] || t.cached["raw"]) {
-		t.raw[x][y] = TerrainConst(jsCall(t.ref, "get", x, y).Int())
+		t.raw[x][y] = CTerrain(jsCall(t.ref, "get", x, y).Int())
 		t.cached[strconv.Itoa(x)+":"+strconv.Itoa(y)] = true
 	}
 	return t.raw[x][y]
 }
 
-func (t *Terrain) GetRaw() [][]TerrainConst {
+func (t *Terrain) GetRaw() [][]CTerrain {
 	if !t.cached["raw"] {
 		jsList := jsCall(t.ref, "getRawBuffer")
 		idx := 0
 		for y := 0; y < 50; y++ {
 			for x := 0; x < 50; x++ {
-				t.raw[x][y] = TerrainConst(jsList.Index(idx).Int())
+				t.raw[x][y] = CTerrain(jsList.Index(idx).Int())
 			}
 		}
 		t.cached["raw"] = true

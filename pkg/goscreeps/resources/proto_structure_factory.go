@@ -13,7 +13,7 @@ type StructureFactory struct {
 	hits          int
 	hitsMax       int
 	id            string
-	structureType StructureConst
+	structureType CStructure
 	my            bool
 	owner         string
 
@@ -88,11 +88,11 @@ func (s *StructureFactory) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *StructureFactory) StructureType() StructureConst {
+func (s *StructureFactory) StructureType() CStructure {
 	return STRUCTURE_FACTORY
 }
 
-func (s *StructureFactory) Destroy() ScreepsError {
+func (s *StructureFactory) Destroy() error {
 	return destroy(s.ref)
 }
 
@@ -100,7 +100,7 @@ func (s *StructureFactory) IsActive() bool {
 	return isActive(s.ref)
 }
 
-func (s *StructureFactory) NotifyWhenAttacked(enabled bool) ScreepsError {
+func (s *StructureFactory) NotifyWhenAttacked(enabled bool) error {
 	return notifyWhenAttacked(s.ref, enabled)
 }
 
@@ -152,7 +152,7 @@ func (s *StructureFactory) Level() int {
 	return s.level
 }
 
-func (s *StructureFactory) Produce(product ResourceConst) ScreepsError {
+func (s *StructureFactory) Produce(product CResource) error {
 	result := jsCall(s.ref, "produce", string(product)).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }

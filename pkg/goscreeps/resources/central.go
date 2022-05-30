@@ -28,6 +28,10 @@ func jsCall(ref js.Value, method string, args ...interface{}) js.Value {
 	return ref.Call(method, args...)
 }
 
+func Ref(v IReference) js.Value {
+	return v.iRef()
+}
+
 func deRefUnknown(ref js.Value) IReference {
 	typeStr := jsCall(ref, "toString").String()
 	matches := re.FindAllString(typeStr, -1)

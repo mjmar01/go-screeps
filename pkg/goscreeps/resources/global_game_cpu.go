@@ -94,22 +94,22 @@ func (c Cpu) Halt() {
 	c.ref.Call("halt")
 }
 
-func (c Cpu) SetShardLimits(limits map[string]int) ScreepsError {
+func (c Cpu) SetShardLimits(limits map[string]int) error {
 	jsLimits := map[string]interface{}{}
 	for k, v := range limits {
 		jsLimits[k] = v
 	}
 
 	result := c.ref.Call("setShardLimits", jsLimits).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
 
-func (c Cpu) Unlock() ScreepsError {
+func (c Cpu) Unlock() error {
 	result := c.ref.Call("unlock").Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
 
-func (c Cpu) GeneratePixel() ScreepsError {
+func (c Cpu) GeneratePixel() error {
 	result := c.ref.Call("generatePixel").Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }

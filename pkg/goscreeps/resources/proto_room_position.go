@@ -65,15 +65,15 @@ func (r *RoomPosition) RoomName() string {
 	return r.roomName()
 }
 
-func (r *RoomPosition) CreateConstructionSite(sType StructureConst, name string) ScreepsError {
+func (r *RoomPosition) CreateConstructionSite(sType CStructure, name string) error {
 	return createConstructionSite(r, sType, name)
 }
 
-func (r *RoomPosition) CreateFlag(name string, primary ColorConst, secondary ColorConst) (string, ScreepsError) {
+func (r *RoomPosition) CreateFlag(name string, primary CColor, secondary CColor) (string, error) {
 	return createFlag(r, name, primary, secondary)
 }
 
-func (r *RoomPosition) FindClosestTypeByPath(fType FindConst, opts *FindClosestByPathOpts) IRoomPosition {
+func (r *RoomPosition) FindClosestTypeByPath(fType CFind, opts *FindClosestByPathOpts) IRoomPosition {
 	panic("TODO")
 }
 
@@ -81,7 +81,7 @@ func (r *RoomPosition) FindClosestPosByPath(targets []IRoomPosition, opts *FindC
 	panic("TODO")
 }
 
-func (r *RoomPosition) FindClosestTypeByRange(fType FindConst, opts *FindFilterOpts) IRoomPosition {
+func (r *RoomPosition) FindClosestTypeByRange(fType CFind, opts *FindFilterOpts) IRoomPosition {
 	panic("TODO")
 }
 
@@ -89,7 +89,7 @@ func (r *RoomPosition) FindClosestPosByRange(targets []IRoomPosition, opts *Find
 	panic("TODO")
 }
 
-func (r *RoomPosition) FindTypeInRange(fType FindConst, maxRange int, opts *FindFilterOpts) []IRoomPosition {
+func (r *RoomPosition) FindTypeInRange(fType CFind, maxRange int, opts *FindFilterOpts) []IRoomPosition {
 	panic("TODO")
 }
 
@@ -101,7 +101,7 @@ func (r *RoomPosition) FindPathTo(target IRoomPosition, opts *FindPathOpts) Path
 	panic("TODO")
 }
 
-func (r *RoomPosition) GetDirectionTo(target IRoomPosition) DirectionConst {
+func (r *RoomPosition) GetDirectionTo(target IRoomPosition) CDirection {
 	panic("TODO")
 }
 
@@ -125,11 +125,11 @@ func (r *RoomPosition) Look() []IRoomPosition {
 	panic("TODO")
 }
 
-func (r *RoomPosition) LookFor(lType LookConst) []IRoomPosition {
+func (r *RoomPosition) LookFor(lType CLook) []IRoomPosition {
 	panic("TODO")
 }
 
-func createConstructionSite(src IRoomPosition, sType StructureConst, name string) ScreepsError {
+func createConstructionSite(src IRoomPosition, sType CStructure, name string) error {
 	var jsName js.Value
 	if name == "" {
 		jsName = js.Undefined()
@@ -137,10 +137,10 @@ func createConstructionSite(src IRoomPosition, sType StructureConst, name string
 		jsName = js.ValueOf(name)
 	}
 	result := jsCall(src.iRef(), "createConstructionSite", string(sType), jsName).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
 
-func createFlag(src IRoomPosition, name string, primary ColorConst, secondary ColorConst) (string, ScreepsError) {
+func createFlag(src IRoomPosition, name string, primary CColor, secondary CColor) (string, error) {
 	var jsName js.Value
 	if name == "" {
 		jsName = js.Undefined()
@@ -151,5 +151,5 @@ func createFlag(src IRoomPosition, name string, primary ColorConst, secondary Co
 	if result.Type() == js.TypeString {
 		return result.String(), nil
 	}
-	return name, ReturnErr(result.Int())
+	return name, returnErr(result.Int())
 }

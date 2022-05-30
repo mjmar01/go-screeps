@@ -6,7 +6,7 @@ type Spawning struct {
 	ref    js.Value
 	cached map[string]bool
 
-	directions    []DirectionConst
+	directions    []CDirection
 	name          string
 	needTime      int
 	remainingTime int
@@ -27,16 +27,16 @@ func (s *Spawning) deRef(ref js.Value) IReference {
 	}
 }
 
-func (s *Spawning) Directions() []DirectionConst {
+func (s *Spawning) Directions() []CDirection {
 	// TODO arrays
 	if s.cached["directions"] {
 		jsDirections := jsGet(s.ref, "directions")
-		var result []DirectionConst
+		var result []CDirection
 		if !jsDirections.IsUndefined() {
 			directionsCount := jsDirections.Length()
-			result = make([]DirectionConst, directionsCount)
+			result = make([]CDirection, directionsCount)
 			for i := 0; i < directionsCount; i++ {
-				result[i] = DirectionConst(jsDirections.Index(i).Int())
+				result[i] = CDirection(jsDirections.Index(i).Int())
 			}
 		}
 		s.directions = result
@@ -77,16 +77,16 @@ func (s *Spawning) Spawn() *StructureSpawn {
 	return s.spawn
 }
 
-func (s *Spawning) Cancel() ScreepsError {
+func (s *Spawning) Cancel() error {
 	result := jsCall(s.ref, "cancel").Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }
 
-func (s *Spawning) SetDirections(directions []DirectionConst) ScreepsError {
+func (s *Spawning) SetDirections(directions []CDirection) error {
 	jsDirections := make([]interface{}, len(directions))
 	for i, v := range directions {
 		jsDirections[i] = int(v)
 	}
 	result := jsCall(s.ref, "setDirections", directions).Int()
-	return ReturnErr(result)
+	return returnErr(result)
 }

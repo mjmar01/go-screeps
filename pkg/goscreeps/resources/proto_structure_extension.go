@@ -13,7 +13,7 @@ type StructureExtension struct {
 	hits          int
 	hitsMax       int
 	id            string
-	structureType StructureConst
+	structureType CStructure
 	my            bool
 	owner         string
 
@@ -102,7 +102,7 @@ func (s *StructureExtension) HitsMax() int {
 	return s.hitsMax
 }
 
-func (s *StructureExtension) StructureType() StructureConst {
+func (s *StructureExtension) StructureType() CStructure {
 	return STRUCTURE_EXTENSION
 }
 
@@ -122,7 +122,7 @@ func (s *StructureExtension) Id() string {
 	return s.id
 }
 
-func (s *StructureExtension) Destroy() ScreepsError {
+func (s *StructureExtension) Destroy() error {
 	return destroy(s.ref)
 }
 
@@ -130,6 +130,6 @@ func (s *StructureExtension) IsActive() bool {
 	return isActive(s.ref)
 }
 
-func (s *StructureExtension) NotifyWhenAttacked(enabled bool) ScreepsError {
+func (s *StructureExtension) NotifyWhenAttacked(enabled bool) error {
 	return notifyWhenAttacked(s.ref, enabled)
 }

@@ -14,7 +14,7 @@ type Deposit struct {
 	cooldown     int
 	lastCooldown int
 	ticksToDecay int
-	depositType  ResourceConst
+	depositType  CResource
 }
 
 func (d *Deposit) iRef() js.Value {
@@ -99,9 +99,9 @@ func (d *Deposit) Id() string {
 	return d.id
 }
 
-func (d *Deposit) DepositType() ResourceConst {
+func (d *Deposit) DepositType() CResource {
 	if !d.cached["depositType"] {
-		d.depositType = ResourceConst(jsGet(d.ref, "depositType").String())
+		d.depositType = CResource(jsGet(d.ref, "depositType").String())
 		d.cached["depositType"] = true
 	}
 	return d.depositType

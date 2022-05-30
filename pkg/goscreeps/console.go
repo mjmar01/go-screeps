@@ -1,6 +1,11 @@
 package goscreeps
 
-import "syscall/js"
+import (
+	"github.com/mjmar01/go-screeps/pkg/goscreeps/resources"
+	"syscall/js"
+
+	_ "unsafe"
+)
 
 type Console struct {
 	ref js.Value
@@ -11,5 +16,20 @@ var console = Console{
 }
 
 func (c Console) Log(args ...interface{}) {
-	c.ref.Call("log", args...)
+	jsArgs := make([]interface{}, len(args))
+	for i, arg := range args {
+		switch arg.(type) {
+		case resources.IReference:
+			jsArgs[i] = resources.Ref(arg.(resources.IReference))
+		default:
+			jsArgs[i] = js.ValueOf(arg)
+		}
+	}
+	c.ref.Call("log", jsArgs...)
+}
+
+func (c Console) CheckErr(err error) {
+	if err != nil {
+		c.ref.Call(err.Error())
+	}
 }

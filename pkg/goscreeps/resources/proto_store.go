@@ -63,7 +63,7 @@ func (s *Store) GetFreeCapacity(resource *CResource) int {
 func (s *Store) GetUsedCapacity(resource *CResource) int {
 	var result js.Value
 	if resource == nil {
-		result = jsCall(s.ref, "getUsedCapacity")
+		result = jsCall(s.ref, "getUsedCapacity", js.Undefined())
 	} else {
 		result = jsCall(s.ref, "getUsedCapacity", string(*resource))
 	}

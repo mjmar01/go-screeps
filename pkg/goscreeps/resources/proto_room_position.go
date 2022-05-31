@@ -118,7 +118,7 @@ func (r *RoomPosition) IsEqualTo(target IRoomPosition) bool {
 }
 
 func (r *RoomPosition) IsNearTo(target IRoomPosition) bool {
-	panic("TODO")
+	return jsCall(r.ref, "isNearTo", target.iRef()).Bool()
 }
 
 func (r *RoomPosition) Look() []IRoomPosition {

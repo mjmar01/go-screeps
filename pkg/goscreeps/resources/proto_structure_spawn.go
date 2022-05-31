@@ -154,7 +154,7 @@ func (s *StructureSpawn) Spawning() *Spawning {
 
 func (s *StructureSpawn) Store() *Store {
 	if !s.cached["store"] {
-		s.store = (&Store{}).deRef(s.ref).(*Store)
+		s.store = (&Store{}).deRef(jsGet(s.ref, "store")).(*Store)
 		s.cached["store"] = true
 	}
 	return s.store

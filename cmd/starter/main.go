@@ -20,7 +20,7 @@ var creepCount int
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	spawn = s.Game.Spawns()["0x0000"]
 	mainRoom = s.Game.Rooms()["W1N8"]
-	source = mainRoom.Find(rs.FIND_SOURCES, nil)[0].(*rs.Source)
+	source = mainRoom.Find(rs.FIND_SOURCES, nil)[1].(*rs.Source)
 	controller = mainRoom.Controller()
 	creepCount = 0
 	for _, creep := range s.Game.Creeps() {

@@ -21,6 +21,10 @@ type IReference interface {
 	iCache() map[string]interface{}
 }
 
+func Ref(ref IReference) js.Value {
+	return ref.iRef()
+}
+
 func jsGet(ref IReference, property string, get func(ref js.Value, property string) interface{}) interface{} {
 	c := ref.iCache()
 	if c[property] == nil {

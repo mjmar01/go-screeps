@@ -45,3 +45,8 @@ func notifyWhenAttacked(ref js.Value, enabled bool) error {
 	result := jsCall(ref, "notifyWhenAttacked", enabled).Int()
 	return returnErr(result)
 }
+
+func getStore(ref js.Value, property string) interface{} {
+	storeRef := ref.Get(property)
+	return (&Store{}).deRef(storeRef)
+}

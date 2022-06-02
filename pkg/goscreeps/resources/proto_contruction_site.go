@@ -4,19 +4,7 @@ import "syscall/js"
 
 type ConstructionSite struct {
 	ref    js.Value
-	cached map[string]bool
-
-	effects []Effect
-	pos     *RoomPosition
-	room    *Room
-	id      string
-
-	my    bool
-	owner string
-
-	progress      int
-	progressTotal int
-	structureType CStructure
+	cached map[string]interface{}
 }
 
 func (c *ConstructionSite) iRef() js.Value {
@@ -29,8 +17,12 @@ func (c *ConstructionSite) deRef(ref js.Value) IReference {
 	}
 	return &ConstructionSite{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (c *ConstructionSite) iCache() map[string]interface{} {
+	return c.cached
 }
 
 func (c *ConstructionSite) x() int {
@@ -46,72 +38,36 @@ func (c *ConstructionSite) roomName() string {
 }
 
 func (c *ConstructionSite) Pos() *RoomPosition {
-	if !c.cached["pos"] {
-		c.pos = pos(c.ref)
-		c.cached["pos"] = true
-	}
-	return c.pos
+	return jsGet(c, "pos", getPos).(*RoomPosition)
 }
 
 func (c *ConstructionSite) Effects() []Effect {
-	if !c.cached["effects"] {
-		c.effects = effects(c.ref)
-		c.cached["effects"] = true
-	}
-	return c.effects
+	return jsGet(c, "effects", getEffects).([]Effect)
 }
 
 func (c *ConstructionSite) Room() *Room {
-	if !c.cached["room"] {
-		c.room = (&Room{}).deRef(c.ref).(*Room)
-		c.cached["room"] = true
-	}
-	return c.room
+	return jsGet(c, "room", getRoom).(*Room)
 }
 
 func (c *ConstructionSite) My() bool {
-	if !c.cached["my"] {
-		c.my = jsGet(c.ref, "my").Bool()
-		c.cached["my"] = true
-	}
-	return c.my
+	return jsGet(c, "my", getBool).(bool)
 }
 
 func (c *ConstructionSite) Owner() string {
-	if !c.cached["owner"] {
-		c.owner = jsGet(c.ref, "owner").String()
-		c.cached["owner"] = true
-	}
-	return c.owner
+	return jsGet(c, "owner", getString).(string)
 }
 
 func (c *ConstructionSite) Id() string {
-	if !c.cached["id"] {
-		c.id = jsGet(c.ref, "id").String()
-		c.cached["id"] = true
-	}
-	return c.id
+	return jsGet(c, "id", getString).(string)
 }
 
 func (c *ConstructionSite) Progress() int {
-	if !c.cached["progress"] {
-		c.progress = jsGet(c.ref, "progress").Int()
-		c.cached["progress"] = true
-	}
-	return c.progress
+	return jsGet(c, "progress", getInt).(int)
 }
 func (c *ConstructionSite) ProgressTotal() int {
-	if !c.cached["progressTotal"] {
-		c.progressTotal = jsGet(c.ref, "progressTotal").Int()
-		c.cached["progressTotal"] = true
-	}
-	return c.progressTotal
+	return jsGet(c, "progressTotal", getInt).(int)
 }
 
 func (c *ConstructionSite) StructureType() CStructure {
-	if !c.cached["structureType"] {
-		c.structureType = CStructure(jsGet(c.ref, "structureType").String())
-		c.cached["structureType"] = true
-	}
-	return c.structureType
+	return CStructure(jsGet(c, "structureType", getString).(string))
 }

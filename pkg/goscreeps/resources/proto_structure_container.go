@@ -4,21 +4,7 @@ import "syscall/js"
 
 type StructureContainer struct {
 	ref    js.Value
-	cached map[string]bool
-
-	pos     *RoomPosition
-	effects []Effect
-	room    *Room
-
-	hits          int
-	hitsMax       int
-	id            string
-	structureType CStructure
-	my            bool
-	owner         string
-
-	store        *Store
-	ticksToDecay int
+	cached map[string]interface{}
 }
 
 func (s *StructureContainer) iRef() js.Value {
@@ -31,8 +17,12 @@ func (s *StructureContainer) deRef(ref js.Value) IReference {
 	}
 	return &StructureContainer{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (s *StructureContainer) iCache() map[string]interface{} {
+	return s.cached
 }
 
 func (s *StructureContainer) x() int {
@@ -48,43 +38,23 @@ func (s *StructureContainer) roomName() string {
 }
 
 func (s *StructureContainer) Pos() *RoomPosition {
-	if !s.cached["pos"] {
-		s.pos = pos(s.ref)
-		s.cached["pos"] = true
-	}
-	return s.pos
+	return jsGet(s, "pos", getPos).(*RoomPosition)
 }
 
 func (s *StructureContainer) Effects() []Effect {
-	if !s.cached["effects"] {
-		s.effects = effects(s.ref)
-		s.cached["effects"] = true
-	}
-	return s.effects
+	return jsGet(s, "effects", getEffects).([]Effect)
 }
 
 func (s *StructureContainer) Room() *Room {
-	if !s.cached["room"] {
-		s.room = (&Room{}).deRef(s.ref).(*Room)
-		s.cached["room"] = true
-	}
-	return s.room
+	return jsGet(s, "room", getRoom).(*Room)
 }
 
 func (s *StructureContainer) Hits() int {
-	if !s.cached["hits"] {
-		s.hits = jsGet(s.ref, "hits").Int()
-		s.cached["hits"] = true
-	}
-	return s.hits
+	return jsGet(s, "hits", getInt).(int)
 }
 
 func (s *StructureContainer) HitsMax() int {
-	if !s.cached["hitsMax"] {
-		s.hitsMax = jsGet(s.ref, "hitsMax").Int()
-		s.cached["hitsMax"] = true
-	}
-	return s.hitsMax
+	return jsGet(s, "hitsMax", getInt).(int)
 }
 
 func (s *StructureContainer) StructureType() CStructure {
@@ -104,25 +74,13 @@ func (s *StructureContainer) NotifyWhenAttacked(enabled bool) error {
 }
 
 func (s *StructureContainer) Id() string {
-	if !s.cached["id"] {
-		s.id = jsGet(s.ref, "id").String()
-		s.cached["id"] = true
-	}
-	return s.id
+	return jsGet(s, "id", getString).(string)
 }
 
 func (s *StructureContainer) Store() *Store {
-	if !s.cached["store"] {
-		s.store = (&Store{}).deRef(s.ref).(*Store)
-		s.cached["store"] = true
-	}
-	return s.store
+	return jsGet(s, "store", getStore).(*Store)
 }
 
 func (s *StructureContainer) TicksToDecay() int {
-	if !s.cached["ticksToDecay"] {
-		s.ticksToDecay = jsGet(s.ref, "ticksToDecay").Int()
-		s.cached["ticksToDecay"] = true
-	}
-	return s.ticksToDecay
+	return jsGet(s, "ticksToDecay", getInt).(int)
 }

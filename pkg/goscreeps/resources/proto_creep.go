@@ -4,23 +4,7 @@ import "syscall/js"
 
 type Creep struct {
 	ref    js.Value
-	cached map[string]bool
-
-	pos         *RoomPosition
-	effects     []Effect
-	room        *Room
-	body        CreepBody
-	fatigue     int
-	hits        int
-	hitsMax     int
-	id          string
-	my          bool
-	owner       string
-	name        string
-	saying      string
-	spawning    bool
-	store       *Store
-	ticksToLive int
+	cached map[string]interface{}
 }
 
 type CreepBody []CBodyPart
@@ -35,8 +19,12 @@ func (c *Creep) deRef(ref js.Value) IReference {
 	}
 	return &Creep{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (c *Creep) iCache() map[string]interface{} {
+	return c.cached
 }
 
 func (c *Creep) x() int {
@@ -52,130 +40,72 @@ func (c *Creep) roomName() string {
 }
 
 func (c *Creep) Pos() *RoomPosition {
-	if !c.cached["pos"] {
-		c.pos = pos(c.ref)
-		c.cached["pos"] = true
-	}
-	return c.pos
+	return jsGet(c, "pos", getPos).(*RoomPosition)
 }
 
 func (c *Creep) Effects() []Effect {
-	if !c.cached["effects"] {
-		c.effects = effects(c.ref)
-		c.cached["effects"] = true
-	}
-	return c.effects
+	return jsGet(c, "effects", getEffects).([]Effect)
 }
 
 func (c *Creep) Room() *Room {
-	if !c.cached["room"] {
-		c.room = (&Room{}).deRef(c.ref).(*Room)
-		c.cached["room"] = true
-	}
-	return c.room
+	return jsGet(c, "room", getRoom).(*Room)
 }
 
 func (c *Creep) My() bool {
-	if !c.cached["my"] {
-		c.my = jsGet(c.ref, "my").Bool()
-		c.cached["my"] = true
-	}
-	return c.my
+	return jsGet(c, "my", getBool).(bool)
 }
 
 func (c *Creep) Owner() string {
-	if !c.cached["owner"] {
-		c.owner = jsGet(c.ref, "owner").String()
-		c.cached["owner"] = true
-	}
-	return c.owner
+	return jsGet(c, "owner", getString).(string)
 }
 
 func (c *Creep) Hits() int {
-	if !c.cached["hits"] {
-		c.hits = jsGet(c.ref, "hits").Int()
-		c.cached["hits"] = true
-	}
-	return c.hits
+	return jsGet(c, "hits", getInt).(int)
 }
 
 func (c *Creep) HitsMax() int {
-	if !c.cached["hitsMax"] {
-		c.hitsMax = jsGet(c.ref, "hitsMax").Int()
-		c.cached["hitsMax"] = true
-	}
-	return c.hitsMax
+	return jsGet(c, "hitsMax", getInt).(int)
 }
 
 func (c *Creep) Id() string {
-	if !c.cached["id"] {
-		c.id = jsGet(c.ref, "id").String()
-		c.cached["id"] = true
-	}
-	return c.id
+	return jsGet(c, "id", getString).(string)
 }
 
 func (c *Creep) Name() string {
-	if !c.cached["name"] {
-		c.name = jsGet(c.ref, "name").String()
-		c.cached["name"] = true
-	}
-	return c.name
+	return jsGet(c, "name", getString).(string)
 }
 
 func (c *Creep) Saying() string {
-	if !c.cached["saying"] {
-		c.saying = jsGet(c.ref, "saying").String()
-		c.cached["saying"] = true
-	}
-	return c.saying
+	return jsGet(c, "saying", getString).(string)
 }
 
 func (c *Creep) Spawning() bool {
-	if !c.cached["spawning"] {
-		c.spawning = jsGet(c.ref, "spawning").Bool()
-		c.cached["spawning"] = true
-	}
-	return c.spawning
+	return jsGet(c, "spawning", getBool).(bool)
 }
 
 func (c *Creep) Fatigue() int {
-	if !c.cached["fatigue"] {
-		c.fatigue = jsGet(c.ref, "fatigue").Int()
-		c.cached["fatigue"] = true
-	}
-	return c.fatigue
+	return jsGet(c, "fatigue", getInt).(int)
 }
 
 func (c *Creep) TicksToLive() int {
-	if !c.cached["ticksToLive"] {
-		c.ticksToLive = jsGet(c.ref, "ticksToLive").Int()
-		c.cached["ticksToLive"] = true
-	}
-	return c.ticksToLive
+	return jsGet(c, "ticksToLive", getInt).(int)
 }
 
 func (c *Creep) Store() *Store {
-	if !c.cached["store"] {
-		c.store = (&Store{}).deRef(jsGet(c.ref, "store")).(*Store)
-		c.cached["store"] = true
-	}
-	return c.store
+	return jsGet(c, "store", getStore).(*Store)
 }
 
 func (c *Creep) Body() CreepBody {
-	if !c.cached["body"] {
-		jsBody := jsGet(c.ref, "body")
+	return jsGet(c, "body", func(ref js.Value, property string) interface{} {
+		jsBody := ref.Get(property)
 		partCount := jsBody.Length()
 		result := make(CreepBody, partCount)
 		for i := 0; i < partCount; i++ {
 			part := jsBody.Index(i)
 			result[i] = CBodyPart(part.String())
 		}
-		c.body = result
-		c.cached["body"] = true
-	}
-	return c.body
+		return result
+	}).(CreepBody)
 }
 
 func (c *Creep) Attack(target IDamageable) error {

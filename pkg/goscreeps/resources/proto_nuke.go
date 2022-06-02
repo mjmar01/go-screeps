@@ -4,15 +4,7 @@ import "syscall/js"
 
 type Nuke struct {
 	ref    js.Value
-	cached map[string]bool
-
-	effects []Effect
-	pos     *RoomPosition
-	room    *Room
-	id      string
-
-	launchRoomName string
-	timeToLand     int
+	cached map[string]interface{}
 }
 
 func (n *Nuke) iRef() js.Value {
@@ -23,10 +15,14 @@ func (n *Nuke) deRef(ref js.Value) IReference {
 	if ref.IsNull() {
 		return nil
 	}
-	return &Deposit{
+	return &Nuke{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (n *Nuke) iCache() map[string]interface{} {
+	return n.cached
 }
 
 func (n *Nuke) x() int {
@@ -42,49 +38,25 @@ func (n *Nuke) roomName() string {
 }
 
 func (n *Nuke) Pos() *RoomPosition {
-	if !n.cached["pos"] {
-		n.pos = pos(n.ref)
-		n.cached["pos"] = true
-	}
-	return n.pos
+	return jsGet(n, "pos", getPos).(*RoomPosition)
 }
 
 func (n *Nuke) Effects() []Effect {
-	if !n.cached["effects"] {
-		n.effects = effects(n.ref)
-		n.cached["effects"] = true
-	}
-	return n.effects
+	return jsGet(n, "effects", getEffects).([]Effect)
 }
 
 func (n *Nuke) Room() *Room {
-	if !n.cached["room"] {
-		n.room = (&Room{}).deRef(n.ref).(*Room)
-		n.cached["room"] = true
-	}
-	return n.room
+	return jsGet(n, "room", getRoom).(*Room)
 }
 
 func (n *Nuke) Id() string {
-	if !n.cached["id"] {
-		n.id = jsGet(n.ref, "id").String()
-		n.cached["id"] = true
-	}
-	return n.id
+	return jsGet(n, "id", getString).(string)
 }
 
 func (n *Nuke) LaunchRoomName() string {
-	if !n.cached["launchRoomName"] {
-		n.launchRoomName = jsCall(n.ref, "launchRoomName", true).String()
-		n.cached["launchRoomName"] = true
-	}
-	return n.launchRoomName
+	return jsGet(n, "launchRoomName", getString).(string)
 }
 
 func (n *Nuke) TimeToLand() int {
-	if !n.cached["timeToLand"] {
-		n.timeToLand = jsCall(n.ref, "timeToLand", true).Int()
-		n.cached["timeToLand"] = true
-	}
-	return n.timeToLand
+	return jsGet(n, "timeToLand", getInt).(int)
 }

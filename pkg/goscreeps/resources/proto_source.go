@@ -4,16 +4,7 @@ import "syscall/js"
 
 type Source struct {
 	ref    js.Value
-	cached map[string]bool
-
-	pos     *RoomPosition
-	effects []Effect
-	room    *Room
-
-	id                  string
-	energy              int
-	energyCapacity      int
-	ticksToRegeneration int
+	cached map[string]interface{}
 }
 
 func (s *Source) iRef() js.Value {
@@ -26,8 +17,12 @@ func (s *Source) deRef(ref js.Value) IReference {
 	}
 	return &Source{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (s *Source) iCache() map[string]interface{} {
+	return s.cached
 }
 
 func (s *Source) x() int {
@@ -43,57 +38,29 @@ func (s *Source) roomName() string {
 }
 
 func (s *Source) Pos() *RoomPosition {
-	if !s.cached["pos"] {
-		s.pos = pos(s.ref)
-		s.cached["pos"] = true
-	}
-	return s.pos
+	return jsGet(s, "pos", getPos).(*RoomPosition)
 }
 
 func (s *Source) Effects() []Effect {
-	if !s.cached["effects"] {
-		s.effects = effects(s.ref)
-		s.cached["effects"] = true
-	}
-	return s.effects
+	return jsGet(s, "effects", getEffects).([]Effect)
 }
 
 func (s *Source) Room() *Room {
-	if !s.cached["room"] {
-		s.room = (&Room{}).deRef(s.ref).(*Room)
-		s.cached["room"] = true
-	}
-	return s.room
+	return jsGet(s, "room", getRoom).(*Room)
 }
 
 func (s *Source) Id() string {
-	if !s.cached["id"] {
-		s.id = jsGet(s.ref, "id").String()
-		s.cached["id"] = true
-	}
-	return s.id
+	return jsGet(s, "id", getString).(string)
 }
 
 func (s *Source) Energy() int {
-	if !s.cached["energy"] {
-		s.energy = jsGet(s.ref, "energy").Int()
-		s.cached["energy"] = true
-	}
-	return s.energy
+	return jsGet(s, "energy", getInt).(int)
 }
 
 func (s *Source) EnergyCapacity() int {
-	if !s.cached["energyCapacity"] {
-		s.energyCapacity = jsGet(s.ref, "energyCapacity").Int()
-		s.cached["energyCapacity"] = true
-	}
-	return s.energyCapacity
+	return jsGet(s, "energyCapacity", getInt).(int)
 }
 
 func (s *Source) TicksToRegeneration() int {
-	if !s.cached["ticksToRegeneration"] {
-		s.ticksToRegeneration = jsGet(s.ref, "ticksToRegeneration").Int()
-		s.cached["ticksToRegeneration"] = true
-	}
-	return s.ticksToRegeneration
+	return jsGet(s, "ticksToRegeneration", getInt).(int)
 }

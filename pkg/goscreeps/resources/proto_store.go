@@ -4,9 +4,7 @@ import "syscall/js"
 
 type Store struct {
 	ref    js.Value
-	cached map[string]bool
-
-	contents map[CResource]int
+	cached map[string]interface{}
 }
 
 func (s *Store) iRef() js.Value {
@@ -19,14 +17,18 @@ func (s *Store) deRef(ref js.Value) IReference {
 	}
 	return &Store{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
 }
 
+func (s *Store) iCache() map[string]interface{} {
+	return s.cached
+}
+
 func (s *Store) Contents() map[CResource]int {
-	if !s.cached["contents"] {
-		entries := jsCall(jsObject, "entries", s.ref)
-		length := jsGet(entries, "length").Int()
+	return jsGet(s, "entries", func(ref js.Value, property string) interface{} {
+		entries := jsCall(jsObject, property, ref)
+		length := entries.Get("length").Int()
 		result := make(map[CResource]int, length)
 		for i := 0; i < length; i++ {
 			entry := entries.Index(i)
@@ -34,10 +36,8 @@ func (s *Store) Contents() map[CResource]int {
 			value := entry.Index(1).Int()
 			result[CResource(key)] = value
 		}
-		s.contents = result
-		s.cached["contents"] = true
-	}
-	return s.contents
+		return result
+	}).(map[CResource]int)
 }
 
 func (s *Store) GetCapacity(resource *CResource) int {

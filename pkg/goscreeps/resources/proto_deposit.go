@@ -4,17 +4,7 @@ import "syscall/js"
 
 type Deposit struct {
 	ref    js.Value
-	cached map[string]bool
-
-	effects []Effect
-	pos     *RoomPosition
-	room    *Room
-	id      string
-
-	cooldown     int
-	lastCooldown int
-	ticksToDecay int
-	depositType  CResource
+	cached map[string]interface{}
 }
 
 func (d *Deposit) iRef() js.Value {
@@ -27,8 +17,12 @@ func (d *Deposit) deRef(ref js.Value) IReference {
 	}
 	return &Deposit{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (d *Deposit) iCache() map[string]interface{} {
+	return d.cached
 }
 
 func (d *Deposit) x() int {
@@ -44,65 +38,33 @@ func (d *Deposit) roomName() string {
 }
 
 func (d *Deposit) Pos() *RoomPosition {
-	if !d.cached["pos"] {
-		d.pos = pos(d.ref)
-		d.cached["pos"] = true
-	}
-	return d.pos
+	return jsGet(d, "pos", getPos).(*RoomPosition)
 }
 
 func (d *Deposit) Effects() []Effect {
-	if !d.cached["effects"] {
-		d.effects = effects(d.ref)
-		d.cached["effects"] = true
-	}
-	return d.effects
+	return jsGet(d, "effects", getEffects).([]Effect)
 }
 
 func (d *Deposit) Room() *Room {
-	if !d.cached["room"] {
-		d.room = (&Room{}).deRef(d.ref).(*Room)
-		d.cached["room"] = true
-	}
-	return d.room
+	return jsGet(d, "room", getRoom).(*Room)
 }
 
 func (d *Deposit) Cooldown() int {
-	if !d.cached["cooldown"] {
-		d.cooldown = jsGet(d.ref, "cooldown").Int()
-		d.cached["cooldown"] = true
-	}
-	return d.cooldown
+	return jsGet(d, "cooldown", getInt).(int)
 }
 
 func (d *Deposit) LastCooldown() int {
-	if !d.cached["lastCooldown"] {
-		d.lastCooldown = jsGet(d.ref, "lastCooldown").Int()
-		d.cached["lastCooldown"] = true
-	}
-	return d.lastCooldown
+	return jsGet(d, "lastCooldown", getInt).(int)
 }
 
 func (d *Deposit) TicksToDecay() int {
-	if !d.cached["ticksToDecay"] {
-		d.ticksToDecay = jsGet(d.ref, "ticksToDecay").Int()
-		d.cached["ticksToDecay"] = true
-	}
-	return d.ticksToDecay
+	return jsGet(d, "ticksToDecay", getInt).(int)
 }
 
 func (d *Deposit) Id() string {
-	if !d.cached["id"] {
-		d.id = jsGet(d.ref, "id").String()
-		d.cached["id"] = true
-	}
-	return d.id
+	return jsGet(d, "id", getString).(string)
 }
 
 func (d *Deposit) DepositType() CResource {
-	if !d.cached["depositType"] {
-		d.depositType = CResource(jsGet(d.ref, "depositType").String())
-		d.cached["depositType"] = true
-	}
-	return d.depositType
+	return CResource(jsGet(d, "depositType", getString).(string))
 }

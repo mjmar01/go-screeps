@@ -16,13 +16,13 @@ type Effect struct {
 	TicksRemaining int
 }
 
-func pos(ref js.Value) *RoomPosition {
-	posRef := ref.Get("pos")
-	return (&RoomPosition{}).deRef(posRef).(*RoomPosition)
+func getPos(ref js.Value, property string) interface{} {
+	posRef := ref.Get(property)
+	return (&RoomPosition{}).deRef(posRef)
 }
 
-func effects(src js.Value) []Effect {
-	jsEffects := src.Get("effects")
+func getEffects(ref js.Value, property string) interface{} {
+	jsEffects := ref.Get(property)
 	effectCount := jsEffects.Length()
 	result := make([]Effect, effectCount)
 	for i := 0; i < effectCount; i++ {
@@ -37,4 +37,9 @@ func effects(src js.Value) []Effect {
 		}
 	}
 	return result
+}
+
+func getRoom(ref js.Value, property string) interface{} {
+	roomRef := ref.Get(property)
+	return (&Room{}).deRef(roomRef)
 }

@@ -4,13 +4,7 @@ import "syscall/js"
 
 type Spawning struct {
 	ref    js.Value
-	cached map[string]bool
-
-	directions    []CDirection
-	name          string
-	needTime      int
-	remainingTime int
-	spawn         *StructureSpawn
+	cached map[string]interface{}
 }
 
 func (s *Spawning) iRef() js.Value {
@@ -23,14 +17,17 @@ func (s *Spawning) deRef(ref js.Value) IReference {
 	}
 	return &Spawning{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
 }
 
+func (s *Spawning) iCache() map[string]interface{} {
+	return s.cached
+}
+
 func (s *Spawning) Directions() []CDirection {
-	// TODO arrays
-	if s.cached["directions"] {
-		jsDirections := jsGet(s.ref, "directions")
+	return jsGet(s, "directions", func(ref js.Value, property string) interface{} {
+		jsDirections := ref.Get(property)
 		var result []CDirection
 		if !jsDirections.IsUndefined() {
 			directionsCount := jsDirections.Length()
@@ -39,42 +36,26 @@ func (s *Spawning) Directions() []CDirection {
 				result[i] = CDirection(jsDirections.Index(i).Int())
 			}
 		}
-		s.directions = result
-		s.cached["directions"] = true
-	}
-	return s.directions
+		return result
+	}).([]CDirection)
 }
 
 func (s *Spawning) Name() string {
-	if !s.cached["name"] {
-		s.name = jsGet(s.ref, "name").String()
-		s.cached["name"] = true
-	}
-	return s.name
+	return jsGet(s, "name", getString).(string)
 }
 
 func (s *Spawning) NeedTime() int {
-	if !s.cached["needTime"] {
-		s.needTime = jsGet(s.ref, "needTime").Int()
-		s.cached["needTime"] = true
-	}
-	return s.needTime
+	return jsGet(s, "needTime", getInt).(int)
 }
 
 func (s *Spawning) RemainingTime() int {
-	if !s.cached["remainingTime"] {
-		s.remainingTime = jsGet(s.ref, "remainingTime").Int()
-		s.cached["remainingTime"] = true
-	}
-	return s.remainingTime
+	return jsGet(s, "remainingTime", getInt).(int)
 }
 
 func (s *Spawning) Spawn() *StructureSpawn {
-	if !s.cached["spawn"] {
-		s.spawn = (&StructureSpawn{}).deRef(jsGet(s.ref, "spawn")).(*StructureSpawn)
-		s.cached["spawn"] = true
-	}
-	return s.spawn
+	return jsGet(s, "spawn", func(ref js.Value, property string) interface{} {
+		return (&StructureSpawn{}).deRef(ref.Get(property))
+	}).(*StructureSpawn)
 }
 
 func (s *Spawning) Cancel() error {

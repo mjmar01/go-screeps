@@ -42,9 +42,9 @@ func (g *Game) WasmUpdate() {
 }
 
 func (g *Game) ConstructionSites() map[string]*ConstructionSite {
-	jsSites := jsGet(g.ref, "constructionSites")
+	jsSites := g.ref.Get("constructionSites")
 	entries := jsCall(jsObject, "entries", jsSites)
-	length := jsGet(entries, "length").Int()
+	length := entries.Get("length").Int()
 	result := make(map[string]*ConstructionSite, length)
 	for i := 0; i < length; i++ {
 		entry := entries.Index(i)
@@ -55,9 +55,9 @@ func (g *Game) ConstructionSites() map[string]*ConstructionSite {
 }
 
 func (g *Game) Creeps() map[string]*Creep {
-	jsCreeps := jsGet(g.ref, "creeps")
+	jsCreeps := g.ref.Get("creeps")
 	entries := jsCall(jsObject, "entries", jsCreeps)
-	length := jsGet(entries, "length").Int()
+	length := entries.Get("length").Int()
 	result := make(map[string]*Creep, length)
 	for i := 0; i < length; i++ {
 		entry := entries.Index(i)
@@ -68,9 +68,9 @@ func (g *Game) Creeps() map[string]*Creep {
 }
 
 func (g *Game) Flags() map[string]*Flag {
-	jsFlags := jsGet(g.ref, "flags")
+	jsFlags := g.ref.Get("flags")
 	entries := jsCall(jsObject, "entries", jsFlags)
-	length := jsGet(entries, "length").Int()
+	length := entries.Get("length").Int()
 	result := make(map[string]*Flag, length)
 	for i := 0; i < length; i++ {
 		entry := entries.Index(i)
@@ -159,9 +159,9 @@ func (g *Game) Shard() Shard {
 }
 
 func (g *Game) Spawns() map[string]*StructureSpawn {
-	jsSpawns := jsGet(g.ref, "spawns")
+	jsSpawns := g.ref.Get("spawns")
 	entries := jsCall(jsObject, "entries", jsSpawns)
-	length := jsGet(entries, "length").Int()
+	length := entries.Get("length").Int()
 	result := make(map[string]*StructureSpawn, length)
 	for i := 0; i < length; i++ {
 		entry := entries.Index(i)
@@ -172,9 +172,9 @@ func (g *Game) Spawns() map[string]*StructureSpawn {
 }
 
 func (g *Game) Structures() map[string]IStructure {
-	jsSites := jsGet(g.ref, "structures")
+	jsSites := g.ref.Get("structures")
 	entries := jsCall(jsObject, "entries", jsSites)
-	length := jsGet(entries, "length").Int()
+	length := entries.Get("length").Int()
 	result := make(map[string]IStructure, length)
 	for i := 0; i < length; i++ {
 		entry := entries.Index(i)

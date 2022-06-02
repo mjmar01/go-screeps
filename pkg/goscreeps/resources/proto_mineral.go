@@ -4,17 +4,7 @@ import "syscall/js"
 
 type Mineral struct {
 	ref    js.Value
-	cached map[string]bool
-
-	effects []Effect
-	pos     *RoomPosition
-	room    *Room
-	id      string
-
-	density             CDensity
-	mineralAmount       int
-	mineralType         CResource
-	ticksToRegeneration int
+	cached map[string]interface{}
 }
 
 func (m *Mineral) iRef() js.Value {
@@ -25,10 +15,14 @@ func (m *Mineral) deRef(ref js.Value) IReference {
 	if ref.IsNull() {
 		return nil
 	}
-	return &Deposit{
+	return &Mineral{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (m *Mineral) iCache() map[string]interface{} {
+	return m.cached
 }
 
 func (m *Mineral) x() int {
@@ -44,65 +38,33 @@ func (m *Mineral) roomName() string {
 }
 
 func (m *Mineral) Pos() *RoomPosition {
-	if !m.cached["pos"] {
-		m.pos = pos(m.ref)
-		m.cached["pos"] = true
-	}
-	return m.pos
+	return jsGet(m, "pos", getPos).(*RoomPosition)
 }
 
 func (m *Mineral) Effects() []Effect {
-	if !m.cached["effects"] {
-		m.effects = effects(m.ref)
-		m.cached["effects"] = true
-	}
-	return m.effects
+	return jsGet(m, "effects", getEffects).([]Effect)
 }
 
 func (m *Mineral) Room() *Room {
-	if !m.cached["room"] {
-		m.room = (&Room{}).deRef(m.ref).(*Room)
-		m.cached["room"] = true
-	}
-	return m.room
+	return jsGet(m, "room", getRoom).(*Room)
 }
 
 func (m *Mineral) MineralAmount() int {
-	if !m.cached["mineralAmount"] {
-		m.mineralAmount = jsGet(m.ref, "mineralAmount").Int()
-		m.cached["mineralAmount"] = true
-	}
-	return m.mineralAmount
+	return jsGet(m, "mineralAmount", getInt).(int)
 }
 
 func (m *Mineral) MineralType() CResource {
-	if !m.cached["mineralType"] {
-		m.mineralType = CResource(jsGet(m.ref, "mineralType").String())
-		m.cached["mineralType"] = true
-	}
-	return m.mineralType
+	return CResource(jsGet(m, "mineralType", getString).(string))
 }
 
 func (m *Mineral) Density() CDensity {
-	if !m.cached["density"] {
-		m.density = CDensity(jsGet(m.ref, "density").Int())
-		m.cached["density"] = true
-	}
-	return m.density
+	return CDensity(jsGet(m, "density", getInt).(int))
 }
 
 func (m *Mineral) Id() string {
-	if !m.cached["id"] {
-		m.id = jsGet(m.ref, "id").String()
-		m.cached["id"] = true
-	}
-	return m.id
+	return jsGet(m, "id", getString).(string)
 }
 
 func (m *Mineral) TicksToRegeneration() int {
-	if !m.cached["ticksToRegeneration"] {
-		m.ticksToRegeneration = jsGet(m.ref, "depositType").Int()
-		m.cached["ticksToRegeneration"] = true
-	}
-	return m.ticksToRegeneration
+	return jsGet(m, "ticksToRegeneration", getInt).(int)
 }

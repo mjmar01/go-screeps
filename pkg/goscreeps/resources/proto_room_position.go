@@ -6,11 +6,7 @@ import (
 
 type RoomPosition struct {
 	ref    js.Value
-	cached map[string]bool
-
-	pX        int
-	pY        int
-	pRoomName string
+	cached map[string]interface{}
 }
 
 var roomPositionConstructor = js.Global().Get("RoomPosition")
@@ -25,32 +21,24 @@ func (r *RoomPosition) deRef(ref js.Value) IReference {
 	}
 	return &RoomPosition{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (r *RoomPosition) iCache() map[string]interface{} {
+	return r.cached
 }
 
 func (r *RoomPosition) x() int {
-	if !r.cached["pX"] {
-		r.pX = jsGet(r.ref, "x").Int()
-		r.cached["pX"] = true
-	}
-	return r.pX
+	return jsGet(r, "x", getInt).(int)
 }
 
 func (r *RoomPosition) y() int {
-	if !r.cached["pY"] {
-		r.pY = jsGet(r.ref, "y").Int()
-		r.cached["pY"] = true
-	}
-	return r.pY
+	return jsGet(r, "y", getInt).(int)
 }
 
 func (r *RoomPosition) roomName() string {
-	if !r.cached["pRoomName"] {
-		r.pRoomName = jsGet(r.ref, "roomName").String()
-		r.cached["pRoomName"] = true
-	}
-	return r.pRoomName
+	return jsGet(r, "roomName", getString).(string)
 }
 
 func (r *RoomPosition) X() int {

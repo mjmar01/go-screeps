@@ -4,23 +4,7 @@ import "syscall/js"
 
 type StructureSpawn struct {
 	ref    js.Value
-	cached map[string]bool
-
-	pos     *RoomPosition
-	effects []Effect
-	room    *Room
-
-	hits          int
-	hitsMax       int
-	id            string
-	structureType CStructure
-
-	my    bool
-	owner string
-
-	name     string
-	spawning *Spawning
-	store    *Store
+	cached map[string]interface{}
 }
 
 type SpawnCreepOpts struct {
@@ -40,8 +24,12 @@ func (s *StructureSpawn) deRef(ref js.Value) IReference {
 	}
 	return &StructureSpawn{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (s *StructureSpawn) iCache() map[string]interface{} {
+	return s.cached
 }
 
 func (s *StructureSpawn) x() int {
@@ -57,43 +45,23 @@ func (s *StructureSpawn) roomName() string {
 }
 
 func (s *StructureSpawn) Pos() *RoomPosition {
-	if !s.cached["pos"] {
-		s.pos = pos(s.ref)
-		s.cached["pos"] = true
-	}
-	return s.pos
+	return jsGet(s, "pos", getPos).(*RoomPosition)
 }
 
 func (s *StructureSpawn) Effects() []Effect {
-	if !s.cached["effects"] {
-		s.effects = effects(s.ref)
-		s.cached["effects"] = true
-	}
-	return s.effects
+	return jsGet(s, "effects", getEffects).([]Effect)
 }
 
 func (s *StructureSpawn) Room() *Room {
-	if !s.cached["room"] {
-		s.room = (&Room{}).deRef(s.ref).(*Room)
-		s.cached["room"] = true
-	}
-	return s.room
+	return jsGet(s, "room", getRoom).(*Room)
 }
 
 func (s *StructureSpawn) Hits() int {
-	if !s.cached["hits"] {
-		s.hits = jsGet(s.ref, "hits").Int()
-		s.cached["hits"] = true
-	}
-	return s.hits
+	return jsGet(s, "hits", getInt).(int)
 }
 
 func (s *StructureSpawn) HitsMax() int {
-	if !s.cached["hitsMax"] {
-		s.hitsMax = jsGet(s.ref, "hitsMax").Int()
-		s.cached["hitsMax"] = true
-	}
-	return s.hitsMax
+	return jsGet(s, "hitsMax", getInt).(int)
 }
 
 func (s *StructureSpawn) StructureType() CStructure {
@@ -113,51 +81,29 @@ func (s *StructureSpawn) NotifyWhenAttacked(enabled bool) error {
 }
 
 func (s *StructureSpawn) My() bool {
-	if !s.cached["my"] {
-		s.my = jsGet(s.ref, "my").Bool()
-		s.cached["my"] = true
-	}
-	return s.my
+	return jsGet(s, "my", getBool).(bool)
 }
 
 func (s *StructureSpawn) Owner() string {
-	if !s.cached["owner"] {
-		s.owner = jsGet(s.ref, "owner").String()
-		s.cached["owner"] = true
-	}
-	return s.owner
+	return jsGet(s, "owner", getString).(string)
 }
 
 func (s *StructureSpawn) Id() string {
-	if !s.cached["id"] {
-		s.id = jsGet(s.ref, "id").String()
-		s.cached["id"] = true
-	}
-	return s.id
+	return jsGet(s, "id", getString).(string)
 }
 
 func (s *StructureSpawn) Name() string {
-	if !s.cached["name"] {
-		s.name = jsGet(s.ref, "name").String()
-		s.cached["name"] = true
-	}
-	return s.name
+	return jsGet(s, "name", getString).(string)
 }
 
 func (s *StructureSpawn) Spawning() *Spawning {
-	if s.cached["spawning"] {
-		s.spawning = (&Spawning{}).deRef(jsGet(s.ref, "spawning")).(*Spawning)
-		s.cached["spawning"] = true
-	}
-	return s.spawning
+	return jsGet(s, "spawning", func(ref js.Value, property string) interface{} {
+		return (&Spawning{}).deRef(ref.Get("spawning"))
+	}).(*Spawning)
 }
 
 func (s *StructureSpawn) Store() *Store {
-	if !s.cached["store"] {
-		s.store = (&Store{}).deRef(jsGet(s.ref, "store")).(*Store)
-		s.cached["store"] = true
-	}
-	return s.store
+	return jsGet(s, "store", getStore).(*Store)
 }
 
 func (s *StructureSpawn) SpawnCreep(body CreepBody, name string, opts *SpawnCreepOpts) error {

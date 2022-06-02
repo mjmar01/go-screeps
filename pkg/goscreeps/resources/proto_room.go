@@ -4,15 +4,7 @@ import "syscall/js"
 
 type Room struct {
 	ref    js.Value
-	cached map[string]bool
-
-	controller              *Controller
-	energyAvailable         int
-	energyCapacityAvailable int
-	name                    string
-	// TODO *StructureStorage
-	// TODO *StructureTerminal
-	// TODO *RoomVisual
+	cached map[string]interface{}
 }
 
 func (r *Room) iRef() js.Value {
@@ -25,40 +17,28 @@ func (r *Room) deRef(ref js.Value) IReference {
 	}
 	return &Room{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (r *Room) iCache() map[string]interface{} {
+	return r.cached
 }
 
 func (r *Room) Controller() *Controller {
-	if !r.cached["controller"] {
-		r.controller = (&Controller{}).deRef(jsGet(r.ref, "controller")).(*Controller)
-		r.cached["controller"] = true
-	}
-	return r.controller
+	return jsGet(r, "controller", getController).(*Controller)
 }
 
 func (r *Room) EnergyAvailable() int {
-	if !r.cached["energyAvailable"] {
-		r.energyAvailable = jsGet(r.ref, "energyAvailable").Int()
-		r.cached["energyAvailable"] = true
-	}
-	return r.energyAvailable
+	return jsGet(r, "energyAvailable", getInt).(int)
 }
 
 func (r *Room) EnergyCapacityAvailable() int {
-	if !r.cached["energyCapacityAvailable"] {
-		r.energyCapacityAvailable = jsGet(r.ref, "energyCapacityAvailable").Int()
-		r.cached["energyCapacityAvailable"] = true
-	}
-	return r.energyCapacityAvailable
+	return jsGet(r, "energyCapacityAvailable", getInt).(int)
 }
 
 func (r *Room) Name() string {
-	if !r.cached["name"] {
-		r.name = jsGet(r.ref, "name").String()
-		r.cached["name"] = true
-	}
-	return r.name
+	return jsGet(r, "name", getString).(string)
 }
 
 // TODO Storage()
@@ -112,11 +92,8 @@ func (r *Room) GetEventLog() string {
 func (r *Room) GetPositionAt(x, y int) *RoomPosition {
 	ref := roomPositionConstructor.New(x, y, r.Name())
 	return &RoomPosition{
-		ref:       ref,
-		cached:    map[string]bool{"pX": true, "pY": true, "pRoomName": true},
-		pX:        x,
-		pY:        y,
-		pRoomName: r.Name(),
+		ref:    ref,
+		cached: map[string]interface{}{"x": x, "y": y, "roomName": r.Name()},
 	}
 }
 
@@ -132,11 +109,11 @@ func unpackPath(path js.Value) Path {
 	for i := 0; i < pathLength; i++ {
 		step := path.Index(i)
 		result[i] = PathStep{
-			x:         jsGet(step, "x").Int(),
-			y:         jsGet(step, "y").Int(),
-			dx:        jsGet(step, "dx").Int(),
-			dy:        jsGet(step, "dy").Int(),
-			direction: CDirection(jsGet(step, "direction").Int()),
+			x:         step.Get("x").Int(),
+			y:         step.Get("y").Int(),
+			dx:        step.Get("dx").Int(),
+			dy:        step.Get("dy").Int(),
+			direction: CDirection(step.Get("direction").Int()),
 		}
 	}
 	return result

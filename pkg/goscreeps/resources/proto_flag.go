@@ -4,15 +4,7 @@ import "syscall/js"
 
 type Flag struct {
 	ref    js.Value
-	cached map[string]bool
-
-	effects []Effect
-	pos     *RoomPosition
-	room    *Room
-
-	color          CColor
-	secondaryColor CColor
-	name           string
+	cached map[string]interface{}
 }
 
 func (f *Flag) iRef() js.Value {
@@ -25,8 +17,12 @@ func (f *Flag) deRef(ref js.Value) IReference {
 	}
 	return &Flag{
 		ref:    ref,
-		cached: make(map[string]bool),
+		cached: make(map[string]interface{}),
 	}
+}
+
+func (f *Flag) iCache() map[string]interface{} {
+	return f.cached
 }
 
 func (f *Flag) x() int {
@@ -42,51 +38,27 @@ func (f *Flag) roomName() string {
 }
 
 func (f *Flag) Pos() *RoomPosition {
-	if !f.cached["pos"] {
-		f.pos = pos(f.ref)
-		f.cached["pos"] = true
-	}
-	return f.pos
+	return jsGet(f, "pos", getPos).(*RoomPosition)
 }
 
 func (f *Flag) Effects() []Effect {
-	if !f.cached["effects"] {
-		f.effects = effects(f.ref)
-		f.cached["effects"] = true
-	}
-	return f.effects
+	return jsGet(f, "effects", getEffects).([]Effect)
 }
 
 func (f *Flag) Room() *Room {
-	if !f.cached["room"] {
-		f.room = (&Room{}).deRef(f.ref).(*Room)
-		f.cached["room"] = true
-	}
-	return f.room
+	return jsGet(f, "room", getRoom).(*Room)
 }
 
 func (f *Flag) Name() string {
-	if !f.cached["name"] {
-		f.name = jsGet(f.ref, "name").String()
-		f.cached["name"] = true
-	}
-	return f.name
+	return jsGet(f, "name", getString).(string)
 }
 
 func (f *Flag) Color() CColor {
-	if !f.cached["color"] {
-		f.color = CColor(jsGet(f.ref, "color").Int())
-		f.cached["color"] = true
-	}
-	return f.color
+	return CColor(jsGet(f, "color", getInt).(int))
 }
 
 func (f *Flag) SecondaryColor() CColor {
-	if !f.cached["secondaryColor"] {
-		f.secondaryColor = CColor(jsGet(f.ref, "secondaryColor").Int())
-		f.cached["secondaryColor"] = true
-	}
-	return f.secondaryColor
+	return CColor(jsGet(f, "secondaryColor", getInt).(int))
 }
 
 func (f *Flag) Remove() {

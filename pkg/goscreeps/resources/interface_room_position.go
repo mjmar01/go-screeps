@@ -6,6 +6,7 @@ type IRoomPosition interface {
 	x() int
 	y() int
 	roomName() string
+	Pos() *RoomPosition
 }
 
 type FindPathOpts struct {

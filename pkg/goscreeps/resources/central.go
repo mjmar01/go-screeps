@@ -8,7 +8,7 @@ import (
 
 var jsObject js.Value
 var jsGlobal js.Value
-var re = regexp.MustCompile("[a-zA-Z0-9\\-\\_\\#\\]]+?\\s")
+var typeRegex = regexp.MustCompile("[a-zA-Z0-9\\-\\_\\#\\]]+?\\s")
 
 func WasmUpdate() {
 	jsGlobal = js.Global()
@@ -51,7 +51,7 @@ func getBool(ref js.Value, property string) interface{} {
 
 func deRefUnknown(ref js.Value) IReference {
 	typeStr := jsCall(ref, "toString").String()
-	matches := re.FindAllString(typeStr, -1)
+	matches := typeRegex.FindAllString(typeStr, -1)
 	if matches == nil {
 		panic("Unable to match: \"" + typeStr + "\"")
 	}

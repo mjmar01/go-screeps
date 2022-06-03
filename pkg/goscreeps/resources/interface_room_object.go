@@ -5,7 +5,6 @@ import "syscall/js"
 type IRoomObject interface {
 	IRoomPosition
 
-	Pos() *RoomPosition
 	Effects() []Effect
 	Room() *Room
 }

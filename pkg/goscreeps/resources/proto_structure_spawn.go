@@ -98,7 +98,7 @@ func (s *StructureSpawn) Name() string {
 
 func (s *StructureSpawn) Spawning() *Spawning {
 	return jsGet(s, "spawning", func(ref js.Value, property string) interface{} {
-		return (&Spawning{}).deRef(ref.Get("spawning"))
+		return (&Spawning{}).deRef(ref.Get(property))
 	}).(*Spawning)
 }
 

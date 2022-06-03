@@ -23,9 +23,9 @@ func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	source = mainRoom.Find(rs.FIND_SOURCES, nil)[1].(*rs.Source)
 	controller = mainRoom.Controller()
 	creepCount = 0
-	for _, creep := range s.Game.Creeps() {
-		creep.Suicide()
-	}
+	//for _, creep := range s.Game.Creeps() {
+	//	creep.Suicide()
+	//}
 	fill = make(map[string]bool)
 }
 
@@ -34,13 +34,13 @@ func loop(s goscreeps.Screeps, console goscreeps.Console) {
 	creeps := s.Game.Creeps()
 	for _, creep := range creeps {
 		if fill[creep.Id()] {
-			move(creep, source)
+			move(creep, source, 1)
 			creep.Harvest(source)
 			if creep.Store().GetFreeCapacity(nil) == 0 {
 				fill[creep.Id()] = false
 			}
 		} else {
-			move(creep, controller)
+			move(creep, controller, 3)
 			creep.UpgradeController(controller)
 			if creep.Store().GetFreeCapacity(nil) == creep.Store().GetCapacity(nil) {
 				fill[creep.Id()] = true
@@ -54,8 +54,8 @@ func loop(s goscreeps.Screeps, console goscreeps.Console) {
 	}
 }
 
-func move(c *rs.Creep, target rs.IRoomPosition) {
-	if !c.Pos().IsNearTo(target) {
+func move(c *rs.Creep, target rs.IRoomPosition, r int) {
+	if !c.Pos().InRangeTo(target, r) {
 		c.MoveTo(target)
 	}
 }

@@ -41,6 +41,10 @@ func (r *RoomPosition) roomName() string {
 	return jsGet(r, "roomName", getString).(string)
 }
 
+func (r *RoomPosition) Pos() *RoomPosition {
+	return r
+}
+
 func (r *RoomPosition) X() int {
 	return r.x()
 }
@@ -98,7 +102,7 @@ func (r *RoomPosition) GetRangeTo(target IRoomPosition) int {
 }
 
 func (r *RoomPosition) InRangeTo(target IRoomPosition, maxRange int) bool {
-	panic("TODO")
+	return jsCall(r.ref, "inRangeTo", target.iRef(), maxRange).Bool()
 }
 
 func (r *RoomPosition) IsEqualTo(target IRoomPosition) bool {

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	goscreeps.Start(onReset, loop)
+	goscreeps.Start(onReset, loop, nil)
 }
 
 var mainRoom *rs.Room
@@ -16,24 +16,20 @@ var spawn *rs.StructureSpawn
 var controller *rs.Controller
 var fill map[string]bool
 var creepCount int
-var creeps map[string]*rs.Creep
 
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	spawn = s.Game.Spawns()["0x0000"]
-	mainRoom = s.Game.Rooms()["W1N8"]
+	mainRoomName := spawn.Pos().RoomName()
+	mainRoom = s.Game.Rooms()[mainRoomName]
 	source = mainRoom.Find(rs.FIND_SOURCES, nil)[1].(*rs.Source)
 	controller = mainRoom.Controller()
-	creepCount = 0
-	//for _, creep := range s.Game.Creeps() {
-	//	creep.Suicide()
-	//}
+	creepCount = len(s.Game.Creeps())
 	fill = make(map[string]bool)
-	creeps = s.Game.Creeps()
 }
 
 func loop(s goscreeps.Screeps, console goscreeps.Console) {
 	spawn = s.Game.Spawns()["0x0000"]
-	creeps = s.Game.Creeps()
+	creeps := s.Game.Creeps()
 	for _, creep := range creeps {
 		if fill[creep.Id()] {
 			move(creep, source, 1)
@@ -49,8 +45,7 @@ func loop(s goscreeps.Screeps, console goscreeps.Console) {
 			}
 		}
 	}
-	e := rs.RESOURCE_ENERGY
-	if spawn.Store().GetUsedCapacity(&e) == 300 {
+	if spawn.Store().GetUsedCapacity(rs.RESOURCE_ENERGY) == 300 {
 		spawn.SpawnCreep(rs.CreepBody{rs.WORK, rs.WORK, rs.CARRY, rs.MOVE}, strconv.Itoa(creepCount), nil)
 		creepCount++
 	}

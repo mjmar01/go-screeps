@@ -2,6 +2,7 @@ package resources
 
 import "syscall/js"
 
+// IStructure is the interface of any structure. (Ex: Spawn, Road, InvaderCore)
 type IStructure interface {
 	IDamageable
 
@@ -12,6 +13,7 @@ type IStructure interface {
 	NotifyWhenAttacked(enabled bool) error
 }
 
+// IDamageable is the interface of any IRoomObject that has hit points. Note that these objects aren't necessarily destructible like KeeperLairs
 type IDamageable interface {
 	IRoomObject
 
@@ -19,13 +21,13 @@ type IDamageable interface {
 	HitsMax() int
 }
 
+// IOwnedStructure is any IStructure that has an owner
 type IOwnedStructure interface {
 	IStructure
-
-	My() bool
-	Owner() string
+	IOwned
 }
 
+// IOwned is any IRoomObject that has an owner
 type IOwned interface {
 	IRoomObject
 
@@ -46,6 +48,7 @@ func notifyWhenAttacked(ref js.Value, enabled bool) error {
 	return returnErr(result)
 }
 
+// retrieve a store for a reference. Used for jsGet
 func getStore(ref js.Value, property string) interface{} {
 	storeRef := ref.Get(property)
 	return (&Store{}).deRef(storeRef)

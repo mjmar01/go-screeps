@@ -1,5 +1,6 @@
 package resources
 
+// IRoomPosition is the interface of anything that has a position in a room. (Ex: Flags, Creeps, Structures)
 type IRoomPosition interface {
 	IReference
 

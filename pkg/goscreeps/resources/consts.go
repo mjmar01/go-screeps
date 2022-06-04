@@ -154,6 +154,7 @@ const (
 )
 
 const (
+	RESOURCE_ANY                          CResource = ""
 	RESOURCE_ENERGY                       CResource = "energy"
 	RESOURCE_POWER                        CResource = "power"
 	RESOURCE_HYDROGEN                     CResource = "H"

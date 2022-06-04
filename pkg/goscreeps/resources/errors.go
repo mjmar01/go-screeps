@@ -2,26 +2,26 @@ package resources
 
 import "errors"
 
-type ErrorCode int
+type CErrorCode int
 
 const (
-	OK                        ErrorCode = 0
-	ERR_NOT_OWNER             ErrorCode = -1
-	ERR_NO_PATH               ErrorCode = -2
-	ERR_NAME_EXISTS           ErrorCode = -3
-	ERR_BUSY                  ErrorCode = -4
-	ERR_NOT_FOUND             ErrorCode = -5
-	ERR_NOT_ENOUGH_ENERGY     ErrorCode = -6
-	ERR_NOT_ENOUGH_RESOURCES  ErrorCode = -6
-	ERR_INVALID_TARGET        ErrorCode = -7
-	ERR_FULL                  ErrorCode = -8
-	ERR_NOT_IN_RANGE          ErrorCode = -9
-	ERR_INVALID_ARGS          ErrorCode = -10
-	ERR_TIRED                 ErrorCode = -11
-	ERR_NO_BODYPART           ErrorCode = -12
-	ERR_NOT_ENOUGH_EXTENSIONS ErrorCode = -6
-	ERR_RCL_NOT_ENOUGH        ErrorCode = -14
-	ERR_GCL_NOT_ENOUGH        ErrorCode = -15
+	OK                        CErrorCode = 0
+	ERR_NOT_OWNER             CErrorCode = -1
+	ERR_NO_PATH               CErrorCode = -2
+	ERR_NAME_EXISTS           CErrorCode = -3
+	ERR_BUSY                  CErrorCode = -4
+	ERR_NOT_FOUND             CErrorCode = -5
+	ERR_NOT_ENOUGH_ENERGY     CErrorCode = -6
+	ERR_NOT_ENOUGH_RESOURCES  CErrorCode = -6
+	ERR_INVALID_TARGET        CErrorCode = -7
+	ERR_FULL                  CErrorCode = -8
+	ERR_NOT_IN_RANGE          CErrorCode = -9
+	ERR_INVALID_ARGS          CErrorCode = -10
+	ERR_TIRED                 CErrorCode = -11
+	ERR_NO_BODYPART           CErrorCode = -12
+	ERR_NOT_ENOUGH_EXTENSIONS CErrorCode = -6
+	ERR_RCL_NOT_ENOUGH        CErrorCode = -14
+	ERR_GCL_NOT_ENOUGH        CErrorCode = -15
 )
 
 var (
@@ -43,7 +43,7 @@ var (
 )
 
 func returnErr(code int) error {
-	switch ErrorCode(code) {
+	switch CErrorCode(code) {
 	case OK:
 		return nil
 	case ERR_NOT_OWNER:

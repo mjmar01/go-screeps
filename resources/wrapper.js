@@ -643,9 +643,6 @@ function loadWasm() {
         localGo.run(wasmInstance)
         localGo._idPool = []
         initIds = localGo._values.length - 1
-        // localGo._ids.forEach((v, k) => {
-        //     console.log("id: ", v, " | key: ", k, " | refs: ", localGo._goRefCounts[v], " | value: ", localGo._values[v])
-        // })
         go = localGo
         global.go = go
     })

@@ -87,7 +87,7 @@ func (s *StructureLink) Cooldown() int {
 
 func (s *StructureLink) TransferEnergy(target *StructureLink, amount int) error {
 	jsAmount := js.Undefined()
-	if amount > 0 {
+	if amount == -1 {
 		jsAmount = js.ValueOf(amount)
 	}
 	result := jsCall(s.ref, "transferEnergy", target.iRef(), jsAmount).Int()

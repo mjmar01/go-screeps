@@ -45,6 +45,7 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 		}()
 		onReset(s, console)
 	}()
+	runtime.GC()
 	for {
 		<-loopTrigger
 		s.Game.WasmUpdate()
@@ -57,12 +58,14 @@ func Start(onReset, loop func(s Screeps, console Console)) {
 			}()
 			loop(s, console)
 		}()
+		js.Global().Call("cleanupGo")
 		stats := cpu.GetHeapStatistics()
 		used := float64(stats.TotalHeapSize) / float64(stats.TotalHeapSize+stats.TotalAvailableSize)
-		if used >= 0.9 {
-			runtime.GC()
-			console.Log("goscreeps: cleared garbage")
-		}
+		console.Log("used: ", used)
+		// if used >= 0.9 {
+		// 	runtime.GC()
+		// 	console.Log("goscreeps: cleared garbage")
+		// }
 	}
 }
 

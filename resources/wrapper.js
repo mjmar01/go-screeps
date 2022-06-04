@@ -206,52 +206,27 @@ const enosys = () => {
     return err;
 };
 
-if (!global.fs) {
-    let outputBuf = "";
-    global.fs = {
-        constants: { O_WRONLY: -1, O_RDWR: -1, O_CREAT: -1, O_TRUNC: -1, O_APPEND: -1, O_EXCL: -1 }, // unused
-        writeSync(fd, buf) {
-            outputBuf += decoder.decode(buf);
-            const nl = outputBuf.lastIndexOf("\n");
-            if (nl != -1) {
-                console.log(outputBuf.substr(0, nl));
-                outputBuf = outputBuf.substr(nl + 1);
-            }
-            return buf.length;
-        },
-        write(fd, buf, offset, length, position, callback) {
-            if (offset !== 0 || length !== buf.length || position !== null) {
-                callback(enosys());
-                return;
-            }
-            const n = this.writeSync(fd, buf);
-            callback(null, n);
-        },
-        chmod(path, mode, callback) { callback(enosys()); },
-        chown(path, uid, gid, callback) { callback(enosys()); },
-        close(fd, callback) { callback(enosys()); },
-        fchmod(fd, mode, callback) { callback(enosys()); },
-        fchown(fd, uid, gid, callback) { callback(enosys()); },
-        fstat(fd, callback) { callback(enosys()); },
-        fsync(fd, callback) { callback(null); },
-        ftruncate(fd, length, callback) { callback(enosys()); },
-        lchown(path, uid, gid, callback) { callback(enosys()); },
-        link(path, link, callback) { callback(enosys()); },
-        lstat(path, callback) { callback(enosys()); },
-        mkdir(path, perm, callback) { callback(enosys()); },
-        open(path, flags, mode, callback) { callback(enosys()); },
-        read(fd, buffer, offset, length, position, callback) { callback(enosys()); },
-        readdir(path, callback) { callback(enosys()); },
-        readlink(path, callback) { callback(enosys()); },
-        rename(from, to, callback) { callback(enosys()); },
-        rmdir(path, callback) { callback(enosys()); },
-        stat(path, callback) { callback(enosys()); },
-        symlink(path, link, callback) { callback(enosys()); },
-        truncate(path, length, callback) { callback(enosys()); },
-        unlink(path, callback) { callback(enosys()); },
-        utimes(path, atime, mtime, callback) { callback(enosys()); },
-    };
-}
+let outputBuf = "";
+global.fs = {
+    constants: { O_WRONLY: -1, O_RDWR: -1, O_CREAT: -1, O_TRUNC: -1, O_APPEND: -1, O_EXCL: -1 }, // unused
+    writeSync(fd, buf) {
+        outputBuf += decoder.decode(buf);
+        const nl = outputBuf.lastIndexOf("\n");
+        if (nl != -1) {
+            console.log(outputBuf.substr(0, nl));
+            outputBuf = outputBuf.substr(nl + 1);
+        }
+        return buf.length;
+    },
+    write(fd, buf, offset, length, position, callback) {
+        if (offset !== 0 || length !== buf.length || position !== null) {
+            callback(enosys());
+            return;
+        }
+        const n = this.writeSync(fd, buf);
+        callback(null, n);
+    },
+};
 
 global.Go = class {
     constructor() {
@@ -407,11 +382,6 @@ global.Go = class {
 
                 // func wasmWrite(fd uintptr, p unsafe.Pointer, n int32)
                 "runtime.wasmWrite": (sp) => {
-                    //sp >>>= 0;
-                    //const fd = getInt64(sp + 8);
-                    //const p = getInt64(sp + 16);
-                    //const n = this.mem.getInt32(sp + 24, true);
-                    //fs.writeSync(fd, new Uint8Array(this._inst.exports.mem.buffer, p, n));
                 },
 
                 // func resetMemoryDataView()
@@ -436,34 +406,12 @@ global.Go = class {
 
                 // func scheduleTimeoutEvent(delay int64) int32
                 "runtime.scheduleTimeoutEvent": (sp) => {
-                    // screeps doesn't have "setTimeout". Hopefully this function won't be needed.
-
-                    //sp >>>= 0;
-                    //const id = this._nextCallbackTimeoutID;
-                    //this._nextCallbackTimeoutID++;
-                    //this._scheduledTimeouts.set(id, setTimeout(
-                    //	() => {
-                    //		this._resume();
-                    //		while (this._scheduledTimeouts.has(id)) {
-                    //			// for some reason Go failed to register the timeout event, log and try again
-                    //			// (temporary workaround for https://github.com/golang/go/issues/28975)
-                    //			console.warn("scheduleTimeoutEvent: missed timeout event");
-                    //			this._resume();
-                    //		}
-                    //	},
-                    //	getInt64(sp + 8) + 1, // setTimeout has been seen to fire up to 1 millisecond early
-                    //));
-                    //this.mem.setInt32(sp + 16, id, true);
+                    sp >>>= 0;
                 },
 
                 // func clearTimeoutEvent(id int32)
                 "runtime.clearTimeoutEvent": (sp) => {
-                    // screeps doesn't have "setTimeout". Hopefully this function won't be needed.
-
-                    //sp >>>= 0;
-                    //const id = this.mem.getInt32(sp + 8, true);
-                    //clearTimeout(this._scheduledTimeouts.get(id));
-                    //this._scheduledTimeouts.delete(id);
+                    sp >>>= 0;
                 },
 
                 // func getRandomData(r []byte)
@@ -595,7 +543,6 @@ global.Go = class {
                     const str = loadValue(sp + 8);
                     loadSlice(sp + 16).set(str);
                 },
-
                 // func valueInstanceOf(v ref, t ref) bool
                 "syscall/js.valueInstanceOf": (sp) => {
                     sp >>>= 0;
@@ -663,40 +610,7 @@ global.Go = class {
         this._idPool = [];      // unused ids that have been garbage collected
         this.exited = false;    // whether the Go program has exited
 
-        // Pass command line arguments and environment variables to WebAssembly by writing them to the linear memory.
-        let offset = 4096;
-
-        const strPtr = (str) => {
-            const ptr = offset;
-            const bytes = this.encoder.encode(str + "\0");
-            new Uint8Array(this.mem.buffer, offset, bytes.length).set(bytes);
-            offset += bytes.length;
-            if (offset % 8 !== 0) {
-                offset += 8 - (offset % 8);
-            }
-            return ptr;
-        };
-
-        const argc = this.argv.length;
-        const argvPtrs = [];
-        this.argv.forEach((arg) => {
-            argvPtrs.push(strPtr(arg));
-        });
-        argvPtrs.push(0);
-        const keys = Object.keys(this.env).sort();
-        keys.forEach((key) => {
-            argvPtrs.push(strPtr(`${key}=${this.env[key]}`));
-        });
-        argvPtrs.push(0);
-
-        const argv = offset;
-        argvPtrs.forEach((ptr) => {
-            this.mem.setUint32(offset, ptr, true);
-            this.mem.setUint32(offset + 4, 0, true);
-            offset += 8;
-        });
-
-        this._inst.exports.run(argc, argv);
+        this._inst.exports.run(0, 4096);
     }
 
     _resume() {
@@ -717,6 +631,7 @@ global.Go = class {
 let go = undefined
 let wasmInstance = undefined
 let block = false
+let initIds = 0
 
 function loadWasm() {
     block = true
@@ -726,8 +641,25 @@ function loadWasm() {
         block = false
         wasmInstance = r.instance
         localGo.run(wasmInstance)
+        localGo._idPool = []
+        initIds = localGo._values.length - 1
+        // localGo._ids.forEach((v, k) => {
+        //     console.log("id: ", v, " | key: ", k, " | refs: ", localGo._goRefCounts[v], " | value: ", localGo._values[v])
+        // })
         go = localGo
         global.go = go
+    })
+}
+
+global.cleanupGo = () => {
+    go._ids.forEach((id) => {
+        if (id > initIds) {
+            global.go._goRefCounts[id] = 0;
+            const v = global.go._values[id];
+            global.go._values[id] = null;
+            global.go._ids.delete(v);
+            global.go._idPool.push(id);
+        }
     })
 }
 

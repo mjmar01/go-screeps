@@ -250,4 +250,11 @@ func (c *Creep) UpgradeController(target *Controller) error {
 	return returnErr(result)
 }
 
-// TODO functions
+func (c *Creep) Withdraw(target IRoomObject, resource CResource, amount int) error {
+	jsAmount := js.ValueOf(amount)
+	if amount == -1 {
+		jsAmount = js.Undefined()
+	}
+	result := jsCall(c.ref, "withdraw", target.iRef(), string(resource), jsAmount).Int()
+	return returnErr(result)
+}

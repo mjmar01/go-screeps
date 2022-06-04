@@ -16,6 +16,8 @@ var spawn *rs.StructureSpawn
 var controller *rs.Controller
 var fill map[string]bool
 var creepCount int
+var creeps map[string]*rs.Creep
+var not interface{}
 
 func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	spawn = s.Game.Spawns()["0x0000"]
@@ -27,11 +29,13 @@ func onReset(s goscreeps.Screeps, console goscreeps.Console) {
 	//	creep.Suicide()
 	//}
 	fill = make(map[string]bool)
+	creeps = s.Game.Creeps()
 }
 
 func loop(s goscreeps.Screeps, console goscreeps.Console) {
+	not = s.Game.ConstructionSites()
 	spawn = s.Game.Spawns()["0x0000"]
-	creeps := s.Game.Creeps()
+	creeps = s.Game.Creeps()
 	for _, creep := range creeps {
 		if fill[creep.Id()] {
 			move(creep, source, 1)

@@ -192,6 +192,11 @@ func (g *Game) Time() int {
 	return g.time
 }
 
+func (g *Game) GetObjectById(id string) IReference {
+	obj := jsCall(g.ref, "getObjectById", id)
+	return deRefUnknown(obj)
+}
+
 func (g *Game) Notify(message string, groupInterval *int) {
 	var jsGroupInterval js.Value
 	if groupInterval == nil {

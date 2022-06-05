@@ -12,7 +12,7 @@ type Screeps struct {
 }
 
 type ScreepsOptions struct {
-	memoryLog bool
+	MemoryLog bool
 }
 
 var loopTrigger chan bool
@@ -48,7 +48,7 @@ func Start(onReset, loop func(s Screeps, console Console), options *ScreepsOptio
 		Game: new(resources.Game),
 	}
 	s.Game.WasmUpdate()
-	if opts.memoryLog {
+	if opts.MemoryLog {
 		cpu = s.Game.Cpu()
 	}
 
@@ -83,7 +83,7 @@ func Start(onReset, loop func(s Screeps, console Console), options *ScreepsOptio
 		js.Global().Call("cleanupGo")
 
 		// Print memory info
-		if opts.memoryLog {
+		if opts.MemoryLog {
 			stats := cpu.GetHeapStatistics()
 			used := float64(stats.TotalHeapSize) / float64(stats.TotalHeapSize+stats.TotalAvailableSize)
 			console.Log("Memory in use (%): ", used)

@@ -30,6 +30,6 @@ func (c Console) Log(args ...interface{}) {
 
 func (c Console) CheckErr(err error) {
 	if err != nil {
-		c.ref.Call(err.Error())
+		c.ref.Call("log", err.Error())
 	}
 }

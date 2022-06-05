@@ -8,7 +8,7 @@ import (
 
 var jsObject js.Value
 var jsGlobal js.Value
-var typeRegex = regexp.MustCompile("[a-zA-Z0-9\\-\\_\\#\\]]+?\\s")
+var typeRegex = regexp.MustCompile("[a-zA-Z0-9()\\-\\_\\#\\]]+?\\s")
 
 // WasmUpdate update global JS references. Will not update game state
 func WasmUpdate() {
@@ -74,6 +74,10 @@ func deRefUnknown(ref js.Value) IReference {
 		result = &StructureSpawn{}
 	case "source":
 		result = &Source{}
+	case "(extension)":
+		result = &StructureExtension{}
+	case "(controller)":
+		result = &Controller{}
 	// TODO more
 	default:
 		panic("Unknown Type: \"" + typeStr + "\"")

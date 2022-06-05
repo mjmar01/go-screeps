@@ -118,7 +118,7 @@ func (c *Creep) AttackController(target *Controller) error {
 	return returnErr(result)
 }
 
-func (c *Creep) Build(target ConstructionSite) error {
+func (c *Creep) Build(target *ConstructionSite) error {
 	result := jsCall(c.ref, "build", target.iRef()).Int()
 	return returnErr(result)
 }

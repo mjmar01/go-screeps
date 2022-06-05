@@ -40,22 +40,22 @@ func (s *Store) Contents() map[CResource]int {
 	}).(map[CResource]int)
 }
 
-func (s *Store) GetCapacity(resource *CResource) int {
+func (s *Store) GetCapacity(resource CResource) int {
 	var result js.Value
-	if resource == nil {
+	if resource == RESOURCE_ANY {
 		result = jsCall(s.ref, "getCapacity")
 	} else {
-		result = jsCall(s.ref, "getCapacity", string(*resource))
+		result = jsCall(s.ref, "getCapacity", string(resource))
 	}
 	return result.Int()
 }
 
-func (s *Store) GetFreeCapacity(resource *CResource) int {
+func (s *Store) GetFreeCapacity(resource CResource) int {
 	var result js.Value
-	if resource == nil {
+	if resource == RESOURCE_ANY {
 		result = jsCall(s.ref, "getFreeCapacity")
 	} else {
-		result = jsCall(s.ref, "getFreeCapacity", string(*resource))
+		result = jsCall(s.ref, "getFreeCapacity", string(resource))
 	}
 	return result.Int()
 }
